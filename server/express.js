@@ -1,22 +1,16 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
-import compress from "compression";
-import cors from "cors";
-import helmet from "helmet";
-import path from "path";
-import Template from "./../template";
-import userRoutes from "./routes/user.routes";
-import authRoutes from "./routes/auth.routes";
+const express = require("express");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const compress = require("compression");
+const cors = require("cors");
+const helmet = require("helmet");
+const path = require("path");
 
-//comment out before building for production
-import devBundle from "./devBundle";
+const userRoutes = require("./routes/user.routes");
+const authRoutes = require("./routes/auth.routes");
 
 const CURRENT_WORKING_DIR = process.cwd();
 const app = express();
-
-//comment out before building for production
-devBundle.compile(app);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,6 +24,9 @@ app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")));
 // mount routes
 app.use("/", userRoutes);
 app.use("/", authRoutes);
+app.get("/", (req, res) => {
+  res.send("Welcome to Server of Social Media App");
+});
 
 // Catch unauthorised errors
 app.use((err, req, res, next) => {
@@ -41,4 +38,4 @@ app.use((err, req, res, next) => {
   }
 });
 
-export default app;
+module.exports = app;

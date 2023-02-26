@@ -45,4 +45,4 @@ const getErrorMessage = (err) => {
   return message;
 };
 
-export default { getErrorMessage };
+module.exports = { getErrorMessage };

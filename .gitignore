@@ -9,4 +9,4 @@ node_modules
 # Documentation here: https://yarnpkg.com/features/zero-installs
 !.yarn/cache
 #.pnp.*
-dist/server.generated.js
+dist

@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import crypto from "crypto";
+const mongoose = require("mongoose");
+const crypto = require("crypto");
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     trim: true,
-    unique: "Email already exists",
+    unique: [true, "Email already exists"],
     match: [/.+\@.+\..+/, "Please fill a valid email address"],
     required: "Email is required",
   },
@@ -64,4 +64,4 @@ UserSchema.methods = {
   },
 };
 
-export default mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);
