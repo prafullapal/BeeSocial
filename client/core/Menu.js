@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import HomeIcon from "@mui/icons-material/Home";
 import { AppBar, Toolbar, Typography, IconButton, Button } from "@mui/material";
 
-import auth from "./../auth/auth-helper";
+import { logout } from "./../auth/api-auth";
 import { Link, useNavigate } from "react-router-dom";
 
-const Menu = () => {
+function Menu(props) {
   let navigate = useNavigate();
   return (
     <AppBar position="static">
@@ -20,27 +20,29 @@ const Menu = () => {
           </IconButton>
         </Link>
         <Link to="/users">
-          <Button>Users</Button>
+          <Button color="inherit">Users</Button>
         </Link>
-        {!auth.isAuthenticated() && (
+        {!props.is_auth && (
           <span>
             <Link to="/signup">
-              <Button>Sign up</Button>
+              <Button color="inherit">Sign up</Button>
             </Link>
             <Link to="/signin">
-              <Button>Sign In</Button>
+              <Button color="inherit">Sign In</Button>
             </Link>
           </span>
         )}
-        {auth.isAuthenticated() && (
+        {props.is_auth && props.user && (
           <span>
-            <Link to={"/user/" + auth.isAuthenticated().user._id}>
-              <Button>My Profile</Button>
+            <Link to={`/user/${props.user.userId}`}>
+              <Button color="inherit">My Profile</Button>
             </Link>
             <Button
               color="inherit"
               onClick={() => {
-                auth.clearJWT(() => navigate("/"));
+                logout();
+                props.onLogOut();
+                navigate("/");
               }}
             >
               Sign out
@@ -50,6 +52,6 @@ const Menu = () => {
       </Toolbar>
     </AppBar>
   );
-};
+}
 
 export default Menu;

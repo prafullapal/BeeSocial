@@ -1,71 +1,56 @@
 import axios from "axios";
 
-const create = async (user) => {
-  try {
-    let response = await axios.post("/api/users/", user, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    return await response.json();
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 const list = async (signal) => {
   try {
-    let response = await axios.get("/api/users/");
+    let response = await axios.get("/api/users/list");
     return await response.data;
   } catch (err) {
     console.log(err);
   }
 };
 
-const read = async (params, credentials, signal) => {
+const read = async (params, signal) => {
   try {
     let response = await axios.get("/api/users/" + params.userId, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + credentials.t,
       },
+      withCredentials: true,
     });
-    return await response.json();
+    return await response.data;
   } catch (err) {
     console.log(err);
   }
 };
 
-const update = async (params, credentials, user) => {
+const update = async (params, user) => {
   try {
-    let response = await axios.put("/api/users/" + params.userId, {
+    let response = await axios.put("/api/users/" + params.userId, user, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + credentials.t,
       },
+      withCredentials: true,
     });
-    return await response.json();
+    return await response.data;
   } catch (err) {
     console.log(err);
   }
 };
 
-const remove = async (params, credentials) => {
+const remove = async (params) => {
   try {
     let response = await axios.delete("/api/users/" + params.userId, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + credentials.t,
       },
     });
-    return await response.json();
+    return await response.data;
   } catch (err) {
     console.log(err);
   }
 };
 
-export { create, list, read, update, remove };
+export { list, read, update, remove };

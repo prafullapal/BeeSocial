@@ -12,16 +12,17 @@ import {
 
 import "./../assets/css/Signin.css";
 
-import auth from "./auth-helper";
-import { signin } from "./api-auth.js";
-import { redirect } from "react-router-dom";
+import { login } from "./api-auth.js";
+import { useNavigate } from "react-router-dom";
 
-export default function Signin() {
+import ErrorIcon from "@mui/icons-material/Error";
+
+export default function Signin(props) {
+  let navigate = useNavigate();
   const [values, setValues] = useState({
     email: "",
     password: "",
-    error: "",
-    redirectToReferrer: false,
+    error: null,
   });
 
   const clickSubmit = () => {
@@ -30,13 +31,14 @@ export default function Signin() {
       password: values.password || undefined,
     };
 
-    signin(user).then((data) => {
-      if (data.error) {
-        setValues({ ...values, error: data.error });
+    login(user).then((data) => {
+      if (data.user) {
+        setValues({ ...values, error: null });
+        localStorage.setItem("user", JSON.stringify(data.user));
+        props.onLogIn();
+        navigate("/user/" + data.user.userId);
       } else {
-        auth.authenticate(data, () => {
-          setValues({ ...values, error: "", redirectToReferrer: true });
-        });
+        setValues({ ...values, error: data.response.data.message });
       }
     });
   };
@@ -44,14 +46,6 @@ export default function Signin() {
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
-
-  const from = {
-    pathname: "/",
-  };
-  const { redirectToReferrer } = values;
-  if (redirectToReferrer) {
-    return redirect(from);
-  }
 
   return (
     <Card className="card">
@@ -79,14 +73,14 @@ export default function Signin() {
           className="textField"
         />
         <br />{" "}
-        {values.error && (
+        {values.error ? (
           <Typography component="p" color="error">
             <Icon color="error" className="error">
-              error
+              <ErrorIcon />
             </Icon>
             {values.error}
           </Typography>
-        )}
+        ) : null}
       </CardContent>
       <CardActions>
         <Button

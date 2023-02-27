@@ -1,67 +1,56 @@
 const mongoose = require("mongoose");
-const crypto = require("crypto");
+const validator = require("validator");
+const bcrypt = require("bcryptjs");
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    trim: true,
-    required: "Name is required",
+    required: [true, "Please provide name"],
+    minlength: 3,
+    maxlength: 50,
   },
   email: {
     type: String,
-    trim: true,
-    unique: [true, "Email already exists"],
-    match: [/.+\@.+\..+/, "Please fill a valid email address"],
-    required: "Email is required",
+    unique: true,
+    required: [true, "Please provide email"],
+    validate: {
+      validator: validator.isEmail,
+      message: "Please provide valid email",
+    },
   },
-  hashed_password: {
+  password: {
     type: String,
-    required: "Password is required",
+    required: [true, "Please provide password"],
+    minlength: 6,
   },
-  salt: String,
-  updated: Date,
-  created: {
+  role: {
+    type: String,
+    enum: ["admin", "user"],
+    default: "user",
+  },
+  verificationToken: String,
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verified: Date,
+  passwordToken: {
+    type: String,
+  },
+  passwordTokenExpirationDate: {
     type: Date,
-    default: Date.now,
   },
 });
 
-UserSchema.virtual("password")
-  .set(function (password) {
-    this._password = password;
-    this.salt = this.makeSalt();
-    this.hashed_password = this.encryptPassword(password);
-  })
-  .get(function () {
-    return this._password;
-  });
+UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
-UserSchema.path("hashed_password").validate(function (v) {
-  if (this._password && this._password.length < 6) {
-    this.invalidate("password", "Password must be at least 6 characters.");
-  }
-  if (this.isNew && !this._password) {
-    this.invalidate("password", "Password is required");
-  }
-}, null);
-
-UserSchema.methods = {
-  authenticate: function (plainText) {
-    return this.encryptPassword(plainText) === this.hashed_password;
-  },
-  encryptPassword: function (password) {
-    if (!password) return "";
-    try {
-      return crypto
-        .createHmac("sha1", this.salt)
-        .update(password)
-        .digest("hex");
-    } catch (err) {
-      return "";
-    }
-  },
-  makeSalt: function () {
-    return Math.round(new Date().valueOf() * Math.random()) + "";
-  },
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
 };
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("Users", UserSchema);

@@ -17,7 +17,7 @@ import {
 
 import "./../assets/css/Signup.css";
 
-import { create } from "./api-user.js";
+import { register } from "./api-auth.js";
 import { Link } from "react-router-dom";
 
 export default function Signup() {
@@ -35,11 +35,11 @@ export default function Signup() {
 
   const clickSubmit = () => {
     const user = {
-      name: values.name || undefined,
       email: values.email || undefined,
+      name: values.name || undefined,
       password: values.password || undefined,
     };
-    create(user).then((data) => {
+    register(user).then((data) => {
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {

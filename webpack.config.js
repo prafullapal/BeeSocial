@@ -1,14 +1,15 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CURRENT_WORKING_DIR = process.cwd();
 
-const buildDirectory = "dist";
+const buildDirectory = "/dist";
 
 module.exports = {
   mode: "development",
   entry: ["babel-polyfill", "./client/main.js"],
   output: {
-    path: path.join(__dirname, buildDirectory),
+    path: path.join(CURRENT_WORKING_DIR, buildDirectory),
     filename: "bundle.js",
   },
   module: {
@@ -53,6 +54,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       favicon: "./public/favicon.ico",
+      publicPath: "/",
     }),
   ],
 };

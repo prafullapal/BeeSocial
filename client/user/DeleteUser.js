@@ -13,30 +13,28 @@ import {
   IconButton,
 } from "@mui/material";
 
-import auth from "./../auth/auth-helper";
 import { remove } from "./api-user.js";
-import { Redirect } from "react-router-dom";
+import { logout } from "../auth/api-auth.js";
+import { useNavigate } from "react-router-dom";
 
 export default function DeleteUser(props) {
+  let navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const [redirect, setRedirct] = useState(false);
 
-  const jwt = auth.isAuthenticated();
   const clickButton = () => {
     setOpen(true);
   };
   const deleteAccount = () => {
-    remove(
-      {
-        userId: props.userId,
-      },
-      { t: jwt.token }
-    ).then((data) => {
+    remove({
+      userId: props.user.userId,
+    }).then((data) => {
       if (data && data.error) {
         console.log(data.error);
       } else {
-        auth.clearJWT(() => console.log("deleted"));
-        setRedirect(true);
+        logout().then(() => console.log("Deleted Successfully!"));
+        props.onLogOut();
+        setRedirct(true);
       }
     });
   };
@@ -45,7 +43,7 @@ export default function DeleteUser(props) {
   };
 
   if (redirect) {
-    return <Redirect to="/" />;
+    return navigate("/");
   }
   return (
     <span>
@@ -74,6 +72,7 @@ export default function DeleteUser(props) {
     </span>
   );
 }
+//propType to be updated because now we get user instead of userId and user has user.userId
 DeleteUser.propTypes = {
   userId: PropTypes.string.isRequired,
 };

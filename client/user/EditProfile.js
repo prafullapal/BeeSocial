@@ -12,20 +12,20 @@ import {
 
 import "./../assets/css/EditProfile.css";
 
-import auth from "./../auth/auth-helper";
 import { read, update } from "./api-user.js";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function EditProfile({ match }) {
+export default function EditProfile() {
+  let navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
     password: "",
     email: "",
+    userId: "",
     open: false,
     error: "",
     redirectToProfile: false,
   });
-  const jwt = auth.isAuthenticated();
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -33,22 +33,25 @@ export default function EditProfile({ match }) {
 
     read(
       {
-        userId: match.params.userId,
+        userId: JSON.parse(localStorage.getItem("user")).userId,
       },
-      { t: jwt.token },
       signal
     ).then((data) => {
       if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ ...values, name: data.name, email: data.email });
+        setValues({
+          ...values,
+          name: data.user.name,
+          email: data.user.email,
+          userId: data.user._id,
+        });
       }
     });
     return function cleanup() {
       abortController.abort();
     };
-  }, [match.params.userId]);
-
+  }, []);
   const clickSubmit = () => {
     const user = {
       name: values.name || undefined,
@@ -57,10 +60,7 @@ export default function EditProfile({ match }) {
     };
     update(
       {
-        userId: match.params.userId,
-      },
-      {
-        t: jwt.token,
+        userId: values.userId,
       },
       user
     ).then((data) => {
@@ -71,13 +71,15 @@ export default function EditProfile({ match }) {
       }
     });
   };
+
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
 
   if (values.redirectToProfile) {
-    return redirect(`/user/${values.userId}`);
+    return navigate(`/user/${values.userId}`);
   }
+
   return (
     <Card className="card">
       <CardContent>
@@ -91,6 +93,7 @@ export default function EditProfile({ match }) {
           onChange={handleChange("name")}
           margin="normal"
           className="textField"
+          disabled
         />
         <br />
         <TextField
@@ -101,6 +104,7 @@ export default function EditProfile({ match }) {
           onChange={handleChange("email")}
           margin="normal"
           className="textField"
+          disabled
         />
         <br />
         <TextField

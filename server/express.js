@@ -5,16 +5,21 @@ const compress = require("compression");
 const cors = require("cors");
 const helmet = require("helmet");
 const path = require("path");
+require("dotenv").config();
 
-const userRoutes = require("./routes/user.routes");
-const authRoutes = require("./routes/auth.routes");
+const router = require("./routes");
+
+const {
+  handle_custom_error,
+  page_not_found_error,
+} = require("./helpers/errorHandler");
 
 const CURRENT_WORKING_DIR = process.cwd();
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser(process.env.JWT_SECRET));
 app.use(compress());
 app.use(helmet());
 app.use(cors());
@@ -22,11 +27,11 @@ app.use(cors());
 app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")));
 
 // mount routes
-app.use("/", userRoutes);
-app.use("/", authRoutes);
-app.get("/", (req, res) => {
-  res.send("Welcome to Server of Social Media App");
-});
+app.use("/", router);
+
+// 404 and other custom error handler
+app.use(handle_custom_error);
+app.use(page_not_found_error);
 
 // Catch unauthorised errors
 app.use((err, req, res, next) => {
