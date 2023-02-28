@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import {
+  Avatar,
   Button,
   Card,
   CardActions,
@@ -9,28 +10,34 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import "./../assets/css/EditProfile.css";
 
 import { read, update } from "./api-user.js";
 import { useNavigate } from "react-router-dom";
+import { FileUpload } from "@mui/icons-material";
 
 export default function EditProfile() {
   let navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
+    about: "",
     password: "",
     email: "",
+    photo: null,
     userId: "",
     open: false,
     error: "",
     redirectToProfile: false,
   });
 
+  const photoUrl = values.userId
+    ? `/api/users/photo/${values.userId}?${new Date().getTime()}`
+    : null;
+
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
-
     read(
       {
         userId: JSON.parse(localStorage.getItem("user")).userId,
@@ -45,6 +52,7 @@ export default function EditProfile() {
           name: data.user.name,
           email: data.user.email,
           userId: data.user._id,
+          about: data.user.about,
         });
       }
     });
@@ -53,27 +61,39 @@ export default function EditProfile() {
     };
   }, []);
   const clickSubmit = () => {
-    const user = {
-      name: values.name || undefined,
-      email: values.email || undefined,
-      password: values.password || undefined,
-    };
+    let userData = new FormData();
+    values.name && userData.append("name", values.name);
+    values.email && userData.append("email", values.email);
+    values.password && userData.append("password", values.password);
+    values.about && userData.append("about", values.about);
+    values.photo && userData.append("photo", values.photo);
+
     update(
       {
         userId: values.userId,
       },
-      user
+      userData
     ).then((data) => {
       if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ ...values, userId: data._id, redirectToProfile: true });
+        console.log(data);
+        setValues({
+          ...values,
+          name: data.name,
+          email: data.email,
+          userId: data._id,
+          about: data.about,
+          photo: data.photo,
+          redirectToProfile: true,
+        });
       }
     });
   };
 
   const handleChange = (name) => (event) => {
-    setValues({ ...values, [name]: event.target.value });
+    const value = name === "photo" ? event.target.files[0] : event.target.value;
+    setValues({ ...values, [name]: value });
   };
 
   if (values.redirectToProfile) {
@@ -86,6 +106,31 @@ export default function EditProfile() {
         <Typography variant="h6" className="title">
           Edit Profile
         </Typography>
+        {photoUrl ? (
+          <Avatar src={photoUrl} />
+        ) : (
+          <Avatar>
+            <AccountCircleIcon />
+          </Avatar>
+        )}
+        <label htmlFor="icon-button-file">
+          <Button variant="contained" component="span">
+            Upload
+            <FileUpload />
+          </Button>
+        </label>
+        <br />
+        <input
+          accept="image/"
+          type="file"
+          onChange={handleChange("photo")}
+          style={{ display: "none" }}
+          id="icon-button-file"
+        />
+        <span className="filename">
+          {values.photo ? values.photo.name : ""}
+        </span>
+        <br />
         <TextField
           id="name"
           label="Name"
@@ -93,7 +138,17 @@ export default function EditProfile() {
           onChange={handleChange("name")}
           margin="normal"
           className="textField"
-          disabled
+        />
+        <br />
+        <TextField
+          id="about"
+          label="About"
+          value={values.about}
+          multiline
+          rows="2"
+          onChange={handleChange("about")}
+          margin="normal"
+          className="textField"
         />
         <br />
         <TextField

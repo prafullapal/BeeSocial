@@ -37,7 +37,6 @@ const register = async (req, res, next) => {
       role,
       verificationToken,
     });
-    console.log(req.headers);
     const origin = req.headers.origin.toString();
     await sendVerificationEmail({
       name: user.name,

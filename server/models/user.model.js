@@ -9,6 +9,10 @@ const UserSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 50,
   },
+  about: {
+    type: String,
+    trim: true,
+  },
   email: {
     type: String,
     unique: true,
@@ -17,6 +21,10 @@ const UserSchema = new mongoose.Schema({
       validator: validator.isEmail,
       message: "Please provide valid email",
     },
+  },
+  photo: {
+    data: Buffer,
+    contentType: String,
   },
   password: {
     type: String,

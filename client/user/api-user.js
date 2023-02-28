@@ -29,7 +29,6 @@ const update = async (params, user) => {
     let response = await axios.put("/api/users/" + params.userId, user, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
       },
       withCredentials: true,
     });

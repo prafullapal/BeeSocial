@@ -36,7 +36,7 @@ const MainRouter = () => {
   };
 
   function PrivateRoute({ children }) {
-    return isAuth && user ? children : <Navigate to="/login" />;
+    return isAuth && user ? children : null;
   }
 
   return (

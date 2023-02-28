@@ -26,6 +26,10 @@ export default function Profile(props) {
   const [user, setUser] = useState({});
   const [redirectToSignin, setRedirectToSignin] = useState(false);
 
+  const photoUrl = user._id
+    ? `/api/users/photo/${user._id}?${new Date().getTime()}`
+    : null;
+
   if (redirectToSignin) {
     return navigate("/signin");
   }
@@ -61,9 +65,13 @@ export default function Profile(props) {
       <List dense>
         <ListItem>
           <ListItemAvatar>
-            <Avatar>
-              <AccountCircleIcon />
-            </Avatar>
+            {photoUrl ? (
+              <Avatar src={photoUrl} />
+            ) : (
+              <Avatar>
+                <AccountCircleIcon />
+              </Avatar>
+            )}
           </ListItemAvatar>
           <ListItemText primary={user.name} secondary={user.email} />
           <ListItemSecondaryAction>
@@ -81,10 +89,14 @@ export default function Profile(props) {
         </ListItem>
         <Divider />
         <ListItem>
+          <ListItemText primary={user.about} />
+        </ListItem>
+        <ListItem>
           <ListItemText
             primary={"Verified: " + new Date(user.verified).toDateString()}
           />
         </ListItem>
+        <Divider />
       </List>
     </Paper>
   );

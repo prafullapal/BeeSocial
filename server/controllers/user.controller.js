@@ -1,9 +1,10 @@
 const User = require("../models/user.model");
+var fs = require("fs");
 
-const read = async (req, res) => {
+const read = async (req, res, next) => {
   try {
     let user = await User.findOne({ _id: req.user.userId }).select(
-      "name email role isVerified verified"
+      "-password -verificationToken -photo"
     );
     if (!user) {
       return next({
@@ -17,7 +18,23 @@ const read = async (req, res) => {
   }
 };
 
-const list = async (req, res) => {
+const photo = async (req, res, next) => {
+  try {
+    let user = await User.findOne({ _id: req.params.userId }).select("photo");
+    if (!user || !user.photo) {
+      return next({
+        status: 401,
+        message: "No Photo found",
+      });
+    }
+    res.set("Content-Type", user.photo.contentType);
+    res.status(200).send(user.photo.data);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const list = async (req, res, next) => {
   try {
     let users = await User.find().select("name email role isVerified verified");
     if (!users) {
@@ -32,7 +49,7 @@ const list = async (req, res) => {
   }
 };
 
-const remove = async (req, res) => {
+const remove = async (req, res, next) => {
   try {
     let deletedUser = await User.findByIdAndRemove(req.user.userId);
     if (!deletedUser) {
@@ -49,14 +66,33 @@ const remove = async (req, res) => {
   }
 };
 
-const update = async (req, res) => {
-  let user = req.body;
-  console.log("Update: ", req.user, " with the following updates: ", user);
-  res.status(200).json({ msg: "Functionality yet to be added." });
+const update = async (req, res, next) => {
+  let { name, email, about } = req.body;
+  try {
+    let user = await User.findOneAndUpdate(
+      { email: email },
+      { name, about },
+      {
+        new: true,
+      }
+    );
+    if (req.file) {
+      user.photo.data = fs.readFileSync(req.file.path);
+      user.photo.contentType = req.file.mimetype;
+    }
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+    await user.save();
+    res.status(200).json(user);
+  } catch (err) {
+    return next(err);
+  }
 };
 
 module.exports = {
   read,
+  photo,
   list,
   remove,
   update,
