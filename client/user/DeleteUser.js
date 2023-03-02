@@ -74,5 +74,5 @@ export default function DeleteUser(props) {
 }
 //propType to be updated because now we get user instead of userId and user has user.userId
 DeleteUser.propTypes = {
-  userId: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
 };

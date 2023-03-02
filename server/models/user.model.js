@@ -26,15 +26,27 @@ const UserSchema = new mongoose.Schema({
     data: Buffer,
     contentType: String,
   },
-  password: {
-    type: String,
-    required: [true, "Please provide password"],
-    minlength: 6,
-  },
   role: {
     type: String,
     enum: ["admin", "user"],
     default: "user",
+  },
+  following: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Users",
+    },
+  ],
+  followers: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Users",
+    },
+  ],
+  password: {
+    type: String,
+    required: [true, "Please provide password"],
+    minlength: 6,
   },
   verificationToken: String,
   isVerified: {

@@ -3,9 +3,11 @@ var fs = require("fs");
 
 const read = async (req, res, next) => {
   try {
-    let user = await User.findOne({ _id: req.user.userId }).select(
-      "-password -verificationToken -photo"
-    );
+    let user = await User.findOne({ _id: req.user.userId })
+      .select("-password -verificationToken -photo")
+      .populate("following", "_id name")
+      .populate("followers", "_id name")
+      .exec();
     if (!user) {
       return next({
         status: 401,
@@ -36,14 +38,16 @@ const photo = async (req, res, next) => {
 
 const list = async (req, res, next) => {
   try {
-    let users = await User.find().select("name email role isVerified verified");
+    let users = await User.find().select(
+      "name email role photo isVerified verified"
+    );
     if (!users) {
       return next({
         status: 401,
         message: "No Users found",
       });
     }
-    res.status(200).json(users);
+    res.status(200).send(users);
   } catch (err) {
     return next(err);
   }
@@ -90,10 +94,102 @@ const update = async (req, res, next) => {
   }
 };
 
+const addFollowing = async (req, res, next) => {
+  try {
+    if (req.body.followId) {
+      let user = await User.findByIdAndUpdate(req.user.userId, {
+        $push: { following: req.body.followId },
+      });
+    } else {
+      return next({
+        status: 404,
+        message: "No such user found",
+      });
+    }
+    next();
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const addFollower = async (req, res, next) => {
+  try {
+    if (req.body.followId) {
+      let result = await User.findByIdAndUpdate(
+        req.body.followId,
+        {
+          $push: { followers: req.user.userId },
+        },
+        { new: true }
+      )
+        .select("-password -verificationToken -photo")
+        .populate("following", "_id name")
+        .populate("followers", "_id name")
+        .exec();
+    } else {
+      return next({
+        status: 404,
+        message: "No such user found",
+      });
+    }
+    res.status(200).json(result);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const removeFollowing = async (req, res, next) => {
+  try {
+    if (req.body.unfollowId) {
+      let user = await User.findByIdAndUpdate(req.user.userId, {
+        $pull: { following: req.body.unfollowId },
+      });
+    } else {
+      return next({
+        status: 404,
+        message: "No such user found",
+      });
+    }
+    next();
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const removeFollower = async (req, res, next) => {
+  try {
+    if (req.body.unfollowId) {
+      let result = await User.findByIdAndUpdate(
+        req.body.unfollowId,
+        {
+          $pull: { followers: req.user.userId },
+        },
+        { new: true }
+      )
+        .select("-password -verificationToken -photo")
+        .populate("following", "_id name")
+        .populate("followers", "_id name")
+        .exec();
+    } else {
+      return next({
+        status: 404,
+        message: "No such user found",
+      });
+    }
+    res.status(200).json(result);
+  } catch (err) {
+    return next(err);
+  }
+};
+
 module.exports = {
   read,
   photo,
   list,
   remove,
   update,
+  addFollowing,
+  addFollower,
+  removeFollowing,
+  removeFollower,
 };

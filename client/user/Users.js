@@ -36,7 +36,6 @@ export default function Users() {
       abortController.abort();
     };
   }, []);
-
   return (
     <Paper className="root" elevation={4}>
       <Typography variant="h6" className="title">
@@ -48,9 +47,17 @@ export default function Users() {
             <Link to={"/user/" + item._id} key={i}>
               <ListItem button>
                 <ListItemAvatar>
-                  <Avatar>
-                    <PersonIcon />
-                  </Avatar>
+                  {item.photo && item.photo.data ? (
+                    <Avatar
+                      src={`/api/users/photo/${
+                        item._id
+                      }?${new Date().getTime()}`}
+                    />
+                  ) : (
+                    <Avatar>
+                      <PersonIcon />
+                    </Avatar>
+                  )}
                 </ListItemAvatar>
                 <ListItemText primary={item.name} />
                 <ListItemSecondaryAction>

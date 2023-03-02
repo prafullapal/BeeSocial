@@ -52,4 +52,42 @@ const remove = async (params) => {
   }
 };
 
-export { list, read, update, remove };
+const follow = async (followId) => {
+  try {
+    let response = await axios.put(
+      "/api/users/follow",
+      { followId: followId },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    return await response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const unfollow = async (unfollowId) => {
+  try {
+    let response = await axios.put(
+      "/api/users/unfollow",
+      { unfollowId: unfollowId },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    return await response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { list, read, update, remove, follow, unfollow };

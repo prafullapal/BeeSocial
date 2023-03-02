@@ -17,4 +17,12 @@ router
   .delete(authenticateUser, userCtrl.remove);
 
 router.route("/photo/:userId").get(userCtrl.photo);
+
+router
+  .route("/follow")
+  .put(authenticateUser, userCtrl.addFollowing, userCtrl.addFollower);
+
+router
+  .route("/unfollow")
+  .put(authenticateUser, userCtrl.removeFollowing, userCtrl.removeFollower);
 module.exports = router;

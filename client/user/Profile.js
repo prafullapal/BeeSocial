@@ -11,7 +11,7 @@ import {
   IconButton,
   Divider,
 } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PersonIcon from "@mui/icons-material/Person";
 import EditIcon from "@mui/icons-material/Edit";
 
 import DeleteUser from "./DeleteUser";
@@ -20,17 +20,22 @@ import { Link, useNavigate } from "react-router-dom";
 import { read } from "./api-user";
 
 import "./../assets/css/Profile.css";
+import FollowProfileButton from "./FollowProfileButton";
+import FollowGrid from "./FollowGrid";
 
 export default function Profile(props) {
   let navigate = useNavigate();
-  const [user, setUser] = useState({});
-  const [redirectToSignin, setRedirectToSignin] = useState(false);
+  const [values, setValues] = useState({
+    user: { following: [], followers: [] },
+    redirectToSignin: false,
+    following: false,
+  });
 
-  const photoUrl = user._id
-    ? `/api/users/photo/${user._id}?${new Date().getTime()}`
+  const photoUrl = values.user._id
+    ? `/api/users/photo/${values.user._id}?${new Date().getTime()}`
     : null;
 
-  if (redirectToSignin) {
+  if (values.redirectToSignin) {
     return navigate("/signin");
   }
   useEffect(() => {
@@ -44,19 +49,43 @@ export default function Profile(props) {
         signal
       ).then((data) => {
         if (data && data.error) {
-          setRedirectToSignin(true);
+          setValues({ ...values, redirectToSignin: true });
         } else {
-          setUser(data.user);
+          let following = checkFollow(data.user);
+          setValues({ ...values, user: data.user, following: following });
         }
       });
     } catch (err) {
-      setRedirectToSignin(true);
+      setValues({ ...values, redirectToSignin: true });
     }
 
     return function cleanup() {
       abortController.abort();
     };
   }, []);
+
+  const checkFollow = (user) => {
+    const match = user.followers.some((follower) => {
+      return follower._id == props.user.userId;
+    });
+    return match;
+  };
+
+  const clickFollowButton = (handler) => {
+    handler(
+      {
+        userId: props.user.userId,
+      },
+      values.user._id
+    ).then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({ ...values, user: data, following: !values.following });
+      }
+    });
+  };
+
   return (
     <Paper className="root" elevation={4}>
       <Typography variant="h6" className="title">
@@ -69,35 +98,47 @@ export default function Profile(props) {
               <Avatar src={photoUrl} />
             ) : (
               <Avatar>
-                <AccountCircleIcon />
+                <PersonIcon />
               </Avatar>
             )}
           </ListItemAvatar>
-          <ListItemText primary={user.name} secondary={user.email} />
+          <ListItemText
+            primary={values.user.name}
+            secondary={values.user.email}
+          />
           <ListItemSecondaryAction>
-            {props.isAuth && props.user.userId == user._id && (
+            {props.isAuth && props.user.userId == values.user._id ? (
               <ListItemSecondaryAction>
-                <Link to={"/user/edit/" + user._id}>
+                <Link to={"/user/edit/" + values.user._id}>
                   <IconButton aria-label="Edit" color="primary">
                     <EditIcon />
                   </IconButton>
                 </Link>
                 <DeleteUser {...props} />
               </ListItemSecondaryAction>
+            ) : (
+              <FollowProfileButton
+                following={values.following}
+                onButtonClick={clickFollowButton}
+              />
             )}
           </ListItemSecondaryAction>
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary={user.about} />
+          <ListItemText primary={values.user.about} />
         </ListItem>
         <ListItem>
           <ListItemText
-            primary={"Verified: " + new Date(user.verified).toDateString()}
+            primary={
+              "Verified: " + new Date(values.user.verified).toDateString()
+            }
           />
         </ListItem>
         <Divider />
       </List>
+      <FollowGrid people={values.user.followers} />
+      <FollowGrid people={values.user.following} />
     </Paper>
   );
 }

@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PersonIcon from "@mui/icons-material/Person";
 import "./../assets/css/EditProfile.css";
 
 import { read, update } from "./api-user.js";
@@ -110,7 +110,7 @@ export default function EditProfile() {
           <Avatar src={photoUrl} />
         ) : (
           <Avatar>
-            <AccountCircleIcon />
+            <PersonIcon />
           </Avatar>
         )}
         <label htmlFor="icon-button-file">
