@@ -3,7 +3,7 @@ var fs = require("fs");
 
 const read = async (req, res, next) => {
   try {
-    let user = await User.findOne({ _id: req.user.userId })
+    let user = await User.findOne({ _id: req.params.userId })
       .select("-password -verificationToken -photo")
       .populate("following", "_id name")
       .populate("followers", "_id name")
@@ -87,6 +87,7 @@ const update = async (req, res, next) => {
     if (req.body.password) {
       user.password = req.body.password;
     }
+    console.log("here");
     await user.save();
     res.status(200).json(user);
   } catch (err) {
@@ -126,13 +127,13 @@ const addFollower = async (req, res, next) => {
         .populate("following", "_id name")
         .populate("followers", "_id name")
         .exec();
+      res.status(200).json(result);
     } else {
       return next({
         status: 404,
         message: "No such user found",
       });
     }
-    res.status(200).json(result);
   } catch (err) {
     return next(err);
   }
@@ -170,13 +171,24 @@ const removeFollower = async (req, res, next) => {
         .populate("following", "_id name")
         .populate("followers", "_id name")
         .exec();
+      res.status(200).json(result);
     } else {
       return next({
         status: 404,
         message: "No such user found",
       });
     }
-    res.status(200).json(result);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const findPeople = async (req, res) => {
+  let following = req.user.following || [];
+  following.push(req.user.userId);
+  try {
+    let users = await User.find({ _id: { $nin: following } }).select("name");
+    res.status(200).json(users);
   } catch (err) {
     return next(err);
   }
@@ -192,4 +204,5 @@ module.exports = {
   addFollower,
   removeFollowing,
   removeFollower,
+  findPeople,
 };

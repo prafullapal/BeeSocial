@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Avatar,
   Paper,
@@ -16,14 +16,16 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import DeleteUser from "./DeleteUser";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { read } from "./api-user";
 
 import "./../assets/css/Profile.css";
 import FollowProfileButton from "./FollowProfileButton";
 import FollowGrid from "./FollowGrid";
+import FindPeople from "./FindPeople";
 
 export default function Profile(props) {
+  let { userId } = useParams();
   let navigate = useNavigate();
   const [values, setValues] = useState({
     user: { following: [], followers: [] },
@@ -44,7 +46,7 @@ export default function Profile(props) {
     try {
       read(
         {
-          userId: JSON.parse(localStorage.getItem("user")).userId,
+          userId: userId,
         },
         signal
       ).then((data) => {
@@ -62,7 +64,7 @@ export default function Profile(props) {
     return function cleanup() {
       abortController.abort();
     };
-  }, []);
+  }, [userId]);
 
   const checkFollow = (user) => {
     const match = user.followers.some((follower) => {
@@ -87,58 +89,62 @@ export default function Profile(props) {
   };
 
   return (
-    <Paper className="root" elevation={4}>
-      <Typography variant="h6" className="title">
-        Profile
-      </Typography>
-      <List dense>
-        <ListItem>
-          <ListItemAvatar>
-            {photoUrl ? (
-              <Avatar src={photoUrl} />
-            ) : (
-              <Avatar>
-                <PersonIcon />
-              </Avatar>
-            )}
-          </ListItemAvatar>
-          <ListItemText
-            primary={values.user.name}
-            secondary={values.user.email}
-          />
-          <ListItemSecondaryAction>
-            {props.isAuth && props.user.userId == values.user._id ? (
-              <ListItemSecondaryAction>
-                <Link to={"/user/edit/" + values.user._id}>
-                  <IconButton aria-label="Edit" color="primary">
-                    <EditIcon />
-                  </IconButton>
-                </Link>
-                <DeleteUser {...props} />
-              </ListItemSecondaryAction>
-            ) : (
-              <FollowProfileButton
-                following={values.following}
-                onButtonClick={clickFollowButton}
-              />
-            )}
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText primary={values.user.about} />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary={
-              "Verified: " + new Date(values.user.verified).toDateString()
-            }
-          />
-        </ListItem>
-        <Divider />
-      </List>
+    <>
+      <Paper className="root" elevation={4}>
+        <Typography variant="h6" className="title">
+          Profile
+        </Typography>
+        <List dense>
+          <ListItem>
+            <ListItemAvatar>
+              {photoUrl ? (
+                <Avatar src={photoUrl} />
+              ) : (
+                <Avatar>
+                  <PersonIcon />
+                </Avatar>
+              )}
+            </ListItemAvatar>
+            <ListItemText
+              primary={values.user.name}
+              secondary={values.user.email}
+            />
+            <ListItemSecondaryAction>
+              {props.isAuth && props.user.userId == values.user._id ? (
+                <ListItemSecondaryAction>
+                  <Link to={"/user/edit/" + values.user._id}>
+                    <IconButton aria-label="Edit" color="primary">
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                  <DeleteUser {...props} />
+                </ListItemSecondaryAction>
+              ) : (
+                <FollowProfileButton
+                  following={values.following}
+                  onButtonClick={clickFollowButton}
+                />
+              )}
+            </ListItemSecondaryAction>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText primary={values.user.about} />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary={
+                "Verified: " + new Date(values.user.verified).toDateString()
+              }
+            />
+          </ListItem>
+          <Divider />
+        </List>
+      </Paper>
+
       <FollowGrid people={values.user.followers} />
       <FollowGrid people={values.user.following} />
-    </Paper>
+      <FindPeople />
+    </>
   );
 }

@@ -11,6 +11,16 @@ const router = express.Router();
 router.route("/list").get(userCtrl.list);
 
 router
+  .route("/follow")
+  .put(authenticateUser, userCtrl.addFollowing, userCtrl.addFollower);
+
+router
+  .route("/unfollow")
+  .put(authenticateUser, userCtrl.removeFollowing, userCtrl.removeFollower);
+
+router.route("/findPeople/:userId").get(authenticateUser, userCtrl.findPeople);
+
+router
   .route("/:userId")
   .get(authenticateUser, userCtrl.read)
   .put(authenticateUser, upload.single("photo"), userCtrl.update)
@@ -18,11 +28,4 @@ router
 
 router.route("/photo/:userId").get(userCtrl.photo);
 
-router
-  .route("/follow")
-  .put(authenticateUser, userCtrl.addFollowing, userCtrl.addFollower);
-
-router
-  .route("/unfollow")
-  .put(authenticateUser, userCtrl.removeFollowing, userCtrl.removeFollower);
 module.exports = router;

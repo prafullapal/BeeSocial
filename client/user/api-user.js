@@ -2,7 +2,7 @@ import axios from "axios";
 
 const list = async (signal) => {
   try {
-    let response = await axios.get("/api/users/list");
+    let response = await axios.get("/api/users/list", { signal: signal });
     return await response.data;
   } catch (err) {
     console.log(err);
@@ -12,6 +12,7 @@ const list = async (signal) => {
 const read = async (params, signal) => {
   try {
     let response = await axios.get("/api/users/" + params.userId, {
+      signal: signal,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -54,9 +55,10 @@ const remove = async (params) => {
 
 const follow = async (followId) => {
   try {
+    console.log("FollowId::", followId);
     let response = await axios.put(
       "/api/users/follow",
-      { followId: followId },
+      { followId },
       {
         headers: {
           Accept: "application/json",
@@ -75,7 +77,7 @@ const unfollow = async (unfollowId) => {
   try {
     let response = await axios.put(
       "/api/users/unfollow",
-      { unfollowId: unfollowId },
+      { unfollowId },
       {
         headers: {
           Accept: "application/json",
@@ -90,4 +92,19 @@ const unfollow = async (unfollowId) => {
   }
 };
 
-export { list, read, update, remove, follow, unfollow };
+const findPeople = async (params, signal) => {
+  try {
+    let response = await axios.get("/api/users/findPeople/" + params.userId, {
+      signal: signal,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    return await response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { list, read, update, remove, follow, unfollow, findPeople };
