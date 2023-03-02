@@ -87,7 +87,6 @@ const update = async (req, res, next) => {
     if (req.body.password) {
       user.password = req.body.password;
     }
-    console.log("here");
     await user.save();
     res.status(200).json(user);
   } catch (err) {
@@ -144,7 +143,7 @@ const removeFollowing = async (req, res, next) => {
     if (req.body.unfollowId) {
       let user = await User.findByIdAndUpdate(req.user.userId, {
         $pull: { following: req.body.unfollowId },
-      });
+      }).select("-password -verificationToken -photo");
     } else {
       return next({
         status: 404,
@@ -183,11 +182,13 @@ const removeFollower = async (req, res, next) => {
   }
 };
 
-const findPeople = async (req, res) => {
-  let following = req.user.following || [];
-  following.push(req.user.userId);
+const findPeople = async (req, res, next) => {
   try {
-    let users = await User.find({ _id: { $nin: following } }).select("name");
+    let following = await User.findById(req.user.userId).select("following");
+    following.following.push(req.user.userId);
+    let users = await User.find({ _id: { $nin: following.following } }).select(
+      "name"
+    );
     res.status(200).json(users);
   } catch (err) {
     return next(err);

@@ -21,6 +21,7 @@ export default function DeleteUser(props) {
   let navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [redirect, setRedirct] = useState(false);
+  const [error, setError] = useState(null);
 
   const clickButton = () => {
     setOpen(true);
@@ -30,7 +31,7 @@ export default function DeleteUser(props) {
       userId: props.user.userId,
     }).then((data) => {
       if (data && data.error) {
-        console.log(data.error);
+        setError(data.error);
       } else {
         logout().then(() => console.log("Deleted Successfully!"));
         props.onLogOut();

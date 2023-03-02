@@ -31,6 +31,7 @@ export default function Profile(props) {
     user: { following: [], followers: [] },
     redirectToSignin: false,
     following: false,
+    error: null,
   });
 
   const photoUrl = values.user._id
@@ -51,7 +52,7 @@ export default function Profile(props) {
         signal
       ).then((data) => {
         if (data && data.error) {
-          setValues({ ...values, redirectToSignin: true });
+          setValues({ ...values, error: data.error, redirectToSignin: true });
         } else {
           let following = checkFollow(data.user);
           setValues({ ...values, user: data.user, following: following });
@@ -74,13 +75,8 @@ export default function Profile(props) {
   };
 
   const clickFollowButton = (handler) => {
-    handler(
-      {
-        userId: props.user.userId,
-      },
-      values.user._id
-    ).then((data) => {
-      if (data.error) {
+    handler(values.user._id).then((data) => {
+      if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
         setValues({ ...values, user: data, following: !values.following });
@@ -142,7 +138,9 @@ export default function Profile(props) {
         </List>
       </Paper>
 
+      <p>Followers</p>
       <FollowGrid people={values.user.followers} />
+      <p>Following</p>
       <FollowGrid people={values.user.following} />
       <FindPeople />
     </>

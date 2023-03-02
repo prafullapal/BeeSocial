@@ -10,7 +10,7 @@ const register = async (user) => {
     });
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 
@@ -24,7 +24,7 @@ const login = async (user) => {
     });
     return await response.data;
   } catch (err) {
-    return err;
+    return { error: err };
   }
 };
 
@@ -33,7 +33,7 @@ const logout = async () => {
     let response = await axios.get("/api/auth/logout");
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 
@@ -47,7 +47,7 @@ const verifyEmail = async (userToken) => {
     });
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 

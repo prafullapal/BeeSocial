@@ -21,6 +21,7 @@ export default function FindPeople() {
     users: [],
     open: false,
     followMessage: "",
+    error: null,
   });
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function FindPeople() {
       signal
     ).then((data) => {
       if (data && data.error) {
-        console.log(data.error);
+        setValues({ ...values, error: data.error });
       } else {
         setValues({ ...values, users: data });
       }
@@ -46,8 +47,8 @@ export default function FindPeople() {
 
   const clickFollow = (user, index) => {
     follow(user._id).then((data) => {
-      if (data.error) {
-        console.log(data.error);
+      if (data && data.error) {
+        setValues({ ...values, error: data.error });
       } else {
         let toFollow = values.users;
         toFollow.splice(index, 1);

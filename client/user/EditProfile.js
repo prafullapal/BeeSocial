@@ -77,7 +77,6 @@ export default function EditProfile() {
       if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        console.log(data);
         setValues({
           ...values,
           name: data.name,

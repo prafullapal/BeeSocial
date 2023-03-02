@@ -5,7 +5,7 @@ const list = async (signal) => {
     let response = await axios.get("/api/users/list", { signal: signal });
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 
@@ -21,7 +21,7 @@ const read = async (params, signal) => {
     });
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 
@@ -35,7 +35,7 @@ const update = async (params, user) => {
     });
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 
@@ -49,7 +49,7 @@ const remove = async (params) => {
     });
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 
@@ -69,7 +69,7 @@ const follow = async (followId) => {
     );
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 
@@ -88,7 +88,7 @@ const unfollow = async (unfollowId) => {
     );
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 
@@ -103,7 +103,7 @@ const findPeople = async (params, signal) => {
     });
     return await response.data;
   } catch (err) {
-    console.log(err);
+    return { error: err };
   }
 };
 

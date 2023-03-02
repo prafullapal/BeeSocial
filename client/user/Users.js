@@ -20,13 +20,14 @@ import { list } from "./api-user.js";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
     list(signal).then((data) => {
       if (data && data.error) {
-        console.log(data.error);
+        setError(data.error);
       } else {
         setUsers(data);
       }
