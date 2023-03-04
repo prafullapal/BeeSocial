@@ -19,14 +19,6 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env"],
-            plugins: ["@babel/plugin-transform-runtime"],
-            // Add the following two options to include polyfills correctly
-            // and avoid the "@babel/polyfill" deprecation warning
-            useBuiltIns: "usage",
-            corejs: { version: 3 },
-          },
         },
       },
       {
