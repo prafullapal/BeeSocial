@@ -1483,19 +1483,6 @@ babel-plugin-polyfill-regenerator@^0.4.1:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.3"
 
-babel-polyfill@^6.26.0:
-  version "6.26.0"
-  dependencies:
-    babel-runtime "^6.26.0"
-    core-js "^2.5.0"
-    regenerator-runtime "^0.10.5"
-
-babel-runtime@^6.26.0:
-  version "6.26.0"
-  dependencies:
-    core-js "^2.4.0"
-    regenerator-runtime "^0.11.0"
-
 balanced-match@^1.0.0:
   version "1.0.2"
 
@@ -1784,12 +1771,6 @@ core-js-compat@^3.25.1:
   version "3.30.0"
   dependencies:
     browserslist "^4.21.5"
-
-core-js@^2.4.0:
-  version "2.6.12"
-
-core-js@^2.5.0:
-  version "2.6.12"
 
 core-js@^3.30.0:
   version "3.30.0"
@@ -3667,12 +3648,6 @@ regenerate-unicode-properties@^10.1.0:
 
 regenerate@^1.4.2:
   version "1.4.2"
-
-regenerator-runtime@^0.10.5:
-  version "0.10.5"
-
-regenerator-runtime@^0.11.0:
-  version "0.11.1"
 
 regenerator-runtime@^0.13.11:
   version "0.13.11"
