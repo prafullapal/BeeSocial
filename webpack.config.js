@@ -7,7 +7,7 @@ const buildDirectory = "/dist";
 
 module.exports = {
   mode: "development",
-  entry: ["babel-polyfill", "./client/main.js"],
+  entry: "./client/main.js",
   output: {
     path: path.join(CURRENT_WORKING_DIR, buildDirectory),
     filename: "bundle.js",
@@ -19,6 +19,14 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-transform-runtime"],
+            // Add the following two options to include polyfills correctly
+            // and avoid the "@babel/polyfill" deprecation warning
+            useBuiltIns: "usage",
+            corejs: { version: 3 },
+          },
         },
       },
       {
