@@ -6,7 +6,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const path = require("path");
 require("dotenv").config();
-
+const morgan = require("morgan");
 const router = require("./routes");
 
 const {
@@ -23,8 +23,9 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use(compress());
 app.use(helmet());
 app.use(cors());
+app.use(morgan("tiny"));
 
-app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")));
+// app.use(express.static(path.join(__dirname, "..", "dist")));
 
 // mount routes
 app.use("/", router);
@@ -33,14 +34,18 @@ app.use("/", router);
 app.use(handle_custom_error);
 app.use(page_not_found_error);
 
+// app.use((req, res, next) => {
+//   res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
+// });
+
 // Catch unauthorised errors
-app.use((err, req, res, next) => {
-  if (err.name === "UnauthorizedError") {
-    res.status(401).json({ error: err.name + ": " + err.message });
-  } else if (err) {
-    res.status(400).json({ error: err.name + ": " + err.message });
-    console.log(err);
-  }
-});
+// app.use((err, req, res, next) => {
+//   if (err.name === "UnauthorizedError") {
+//     res.status(401).json({ error: err.name + ": " + err.message });
+//   } else if (err) {
+//     res.status(400).json({ error: err.name + ": " + err.message });
+//     console.log(err);
+//   }
+// });
 
 module.exports = app;

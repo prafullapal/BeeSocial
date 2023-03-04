@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+import { list } from "./api-user.js";
 
 import {
   Paper,
@@ -14,9 +17,6 @@ import {
 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonIcon from "@mui/icons-material/Person";
-
-import { Link } from "react-router-dom";
-import { list } from "./api-user.js";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -38,15 +38,13 @@ export default function Users() {
     };
   }, []);
   return (
-    <Paper className="root" elevation={4}>
-      <Typography variant="h6" className="title">
-        All Users
-      </Typography>
+    <Paper elevation={4}>
+      <Typography variant="h6">All Users</Typography>
       <List dense>
         {users.map((item, i) => {
           return (
             <Link to={"/user/" + item._id} key={i}>
-              <ListItem button>
+              <ListItem>
                 <ListItemAvatar>
                   {item.photo && item.photo.data ? (
                     <Avatar

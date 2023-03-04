@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
+import { register } from "./api-auth.js";
 
 import {
   Button,
@@ -15,10 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import "./../assets/css/Signup.css";
-
-import { register } from "./api-auth.js";
-import { Link } from "react-router-dom";
+// import "./../assets/css/Signup.css";
 
 export default function Signup() {
   const [values, setValues] = useState({
@@ -50,15 +50,12 @@ export default function Signup() {
 
   return (
     <div>
-      <Card className="card">
+      <Card>
         <CardContent>
-          <Typography variant="h6" className="title">
-            Sign Up
-          </Typography>
+          <Typography variant="h6">Sign Up</Typography>
           <TextField
             id="name"
             label="Name"
-            className="textField"
             value={values.name}
             onChange={handleChange("name")}
             margin="normal"
@@ -68,7 +65,6 @@ export default function Signup() {
             id="email"
             type="email"
             label="Email"
-            className="textField"
             value={values.email}
             onChange={handleChange("email")}
             margin="normal"
@@ -78,7 +74,6 @@ export default function Signup() {
             id="password"
             type="password"
             label="Password"
-            className="textField"
             value={values.password}
             onChange={handleChange("password")}
             margin="normal"
@@ -86,20 +81,13 @@ export default function Signup() {
           <br />{" "}
           {values.error && (
             <Typography component="p" color="error">
-              <Icon color="error" className="error">
-                error
-              </Icon>
+              <Icon color="error">error</Icon>
               {values.error}
             </Typography>
           )}
         </CardContent>
         <CardActions>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={clickSubmit}
-            className="submit"
-          >
+          <Button color="primary" variant="contained" onClick={clickSubmit}>
             Submit
           </Button>
         </CardActions>

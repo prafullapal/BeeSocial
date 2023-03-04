@@ -1,4 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
+import { read } from "./api-user";
+import { listByUser } from "../post/api-post";
+
+import DeleteUser from "./DeleteUser";
+import FollowProfileButton from "./FollowProfileButton";
+import ProfileTab from "./ProfileTab";
+
 import {
   Avatar,
   Paper,
@@ -9,24 +18,19 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
+  Grid,
   Divider,
 } from "@mui/material";
+
 import PersonIcon from "@mui/icons-material/Person";
 import EditIcon from "@mui/icons-material/Edit";
 
-import DeleteUser from "./DeleteUser";
-
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { read } from "./api-user";
-
-import "./../assets/css/Profile.css";
-import FollowProfileButton from "./FollowProfileButton";
-import FollowGrid from "./FollowGrid";
-import FindPeople from "./FindPeople";
+// import "./../assets/css/Profile.css";
 
 export default function Profile(props) {
   let { userId } = useParams();
   let navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
   const [values, setValues] = useState({
     user: { following: [], followers: [] },
     redirectToSignin: false,
@@ -54,8 +58,8 @@ export default function Profile(props) {
         if (data && data.error) {
           setValues({ ...values, error: data.error, redirectToSignin: true });
         } else {
-          let following = checkFollow(data.user);
-          setValues({ ...values, user: data.user, following: following });
+          setValues({ ...values, user: data.user, following: data.following });
+          if (userId === data.user._id) loadPosts();
         }
       });
     } catch (err) {
@@ -67,13 +71,6 @@ export default function Profile(props) {
     };
   }, [userId]);
 
-  const checkFollow = (user) => {
-    const match = user.followers.some((follower) => {
-      return follower._id == props.user.userId;
-    });
-    return match;
-  };
-
   const clickFollowButton = (handler) => {
     handler(values.user._id).then((data) => {
       if (data && data.error) {
@@ -84,12 +81,29 @@ export default function Profile(props) {
     });
   };
 
+  const loadPosts = () => {
+    listByUser({ userId: userId }).then((data) => {
+      if (data && data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setPosts(data);
+      }
+    });
+  };
+
   return (
     <>
-      <Paper className="root" elevation={4}>
-        <Typography variant="h6" className="title">
-          Profile
-        </Typography>
+      <Paper
+        elevation={4}
+        sx={{
+          margin: "auto",
+          padding: "10px",
+          marginTop: "20px",
+          maxWidth: "70%",
+        }}
+      >
+        <Typography variant="h6">Profile</Typography>
+        <Divider />
         <List dense>
           <ListItem>
             <ListItemAvatar>
@@ -136,13 +150,8 @@ export default function Profile(props) {
           </ListItem>
           <Divider />
         </List>
+        <ProfileTab {...props} profile={values.user} posts={posts} />
       </Paper>
-
-      <p>Followers</p>
-      <FollowGrid people={values.user.followers} />
-      <p>Following</p>
-      <FollowGrid people={values.user.following} />
-      <FindPeople />
     </>
   );
 }

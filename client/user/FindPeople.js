@@ -1,3 +1,7 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { findPeople, follow } from "./api-user";
+
 import {
   Avatar,
   List,
@@ -10,13 +14,12 @@ import {
   Typography,
   Button,
   Paper,
+  Divider,
 } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { findPeople, follow } from "./api-user";
 
-export default function FindPeople() {
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
+export default function FindPeople(props) {
   const [values, setValues] = useState({
     users: [],
     open: false,
@@ -30,7 +33,7 @@ export default function FindPeople() {
 
     findPeople(
       {
-        userId: JSON.parse(localStorage.getItem("user")).userId,
+        userId: props.user.userId,
       },
       signal
     ).then((data) => {
@@ -68,26 +71,23 @@ export default function FindPeople() {
 
   return (
     <>
-      <Paper className="root" elevation={4}>
-        <Typography type="title" className="title">
+      <Paper elevation={4} sx={{ padding: "10px" }}>
+        <Typography type="title" variant="h6">
           Who to Follow
         </Typography>
+        <Divider />
         <List>
           {values.users.map((item, i) => {
             return (
               <span key={i}>
                 <ListItem>
-                  <ListItemAvatar className="avatar">
+                  <ListItemAvatar>
                     <Avatar src={"/api/users/photo/" + item._id} />
                   </ListItemAvatar>
                   <ListItemText primary={item.name} />
-                  <ListItemSecondaryAction className="follow">
+                  <ListItemSecondaryAction>
                     <Link to={"/user/" + item._id}>
-                      <IconButton
-                        variant="contained"
-                        color="secondary"
-                        className="viewButton"
-                      >
+                      <IconButton variant="contained" color="secondary">
                         <VisibilityIcon />
                       </IconButton>
                     </Link>
@@ -114,7 +114,7 @@ export default function FindPeople() {
         open={values.open}
         onClose={handleRequestClose}
         autoHideDuration={6000}
-        message={<span className="snack">{values.followMessage}</span>}
+        message={<span>{values.followMessage}</span>}
       />
     </>
   );

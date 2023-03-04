@@ -53,7 +53,7 @@ const verifyEmail = async (userToken) => {
 
 const isAuthenticated = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  return user !== null ? user : false;
+  return user ? { isLoggedIn: true, user: user } : { isLoggedIn: false };
 };
 
 export { register, login, logout, verifyEmail, isAuthenticated };

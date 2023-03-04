@@ -1,6 +1,13 @@
 const User = require("../models/user.model");
 var fs = require("fs");
 
+const checkFollow = (user, userId) => {
+  const match = user.followers.some((follower) => {
+    return follower._id == userId;
+  });
+  return match;
+};
+
 const read = async (req, res, next) => {
   try {
     let user = await User.findOne({ _id: req.params.userId })
@@ -14,7 +21,9 @@ const read = async (req, res, next) => {
         message: "User not found",
       });
     }
-    res.status(200).json({ user });
+
+    let following = checkFollow(user, req.user.userId);
+    res.status(200).json({ user, following: following });
   } catch (err) {
     return next(err);
   }

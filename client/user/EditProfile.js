@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { read, update } from "./api-user.js";
 
 import {
   Avatar,
@@ -10,14 +13,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import "./../assets/css/EditProfile.css";
 
-import { read, update } from "./api-user.js";
-import { useNavigate } from "react-router-dom";
+import PersonIcon from "@mui/icons-material/Person";
 import { FileUpload } from "@mui/icons-material";
 
-export default function EditProfile() {
+// import "./../assets/css/EditProfile.css";
+
+export default function EditProfile(props) {
   let navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
@@ -31,8 +33,8 @@ export default function EditProfile() {
     redirectToProfile: false,
   });
 
-  const photoUrl = values.userId
-    ? `/api/users/photo/${values.userId}?${new Date().getTime()}`
+  const photoUrl = props.user.userId
+    ? `/api/users/photo/${props.user.userId}?${new Date().getTime()}`
     : null;
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function EditProfile() {
     const signal = abortController.signal;
     read(
       {
-        userId: JSON.parse(localStorage.getItem("user")).userId,
+        userId: props.user.userId,
       },
       signal
     ).then((data) => {
@@ -100,11 +102,9 @@ export default function EditProfile() {
   }
 
   return (
-    <Card className="card">
+    <Card>
       <CardContent>
-        <Typography variant="h6" className="title">
-          Edit Profile
-        </Typography>
+        <Typography variant="h6">Edit Profile</Typography>
         {photoUrl ? (
           <Avatar src={photoUrl} />
         ) : (
@@ -126,9 +126,7 @@ export default function EditProfile() {
           style={{ display: "none" }}
           id="icon-button-file"
         />
-        <span className="filename">
-          {values.photo ? values.photo.name : ""}
-        </span>
+        <span>{values.photo ? values.photo.name : ""}</span>
         <br />
         <TextField
           id="name"
@@ -136,7 +134,6 @@ export default function EditProfile() {
           value={values.name}
           onChange={handleChange("name")}
           margin="normal"
-          className="textField"
         />
         <br />
         <TextField
@@ -147,7 +144,6 @@ export default function EditProfile() {
           rows="2"
           onChange={handleChange("about")}
           margin="normal"
-          className="textField"
         />
         <br />
         <TextField
@@ -157,7 +153,6 @@ export default function EditProfile() {
           value={values.email}
           onChange={handleChange("email")}
           margin="normal"
-          className="textField"
           disabled
         />
         <br />
@@ -168,25 +163,17 @@ export default function EditProfile() {
           value={values.password}
           onChange={handleChange("password")}
           margin="normal"
-          className="textField"
         />
         <br />{" "}
         {values.error && (
           <Typography component="p" color="error">
-            <Icon color="error" className="error">
-              error
-            </Icon>
+            <Icon color="error">error</Icon>
             {values.error}
           </Typography>
         )}
       </CardContent>
       <CardActions>
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={clickSubmit}
-          className="submit"
-        >
+        <Button color="primary" variant="contained" onClick={clickSubmit}>
           Submit
         </Button>
       </CardActions>

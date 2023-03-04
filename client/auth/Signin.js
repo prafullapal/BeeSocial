@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { login } from "./api-auth.js";
 
 import {
   Card,
@@ -10,12 +13,9 @@ import {
   Icon,
 } from "@mui/material";
 
-import "./../assets/css/Signin.css";
-
-import { login } from "./api-auth.js";
-import { useNavigate } from "react-router-dom";
-
 import ErrorIcon from "@mui/icons-material/Error";
+
+// import "./../assets/css/Signin.css";
 
 export default function Signin(props) {
   let navigate = useNavigate();
@@ -36,7 +36,7 @@ export default function Signin(props) {
         setValues({ ...values, error: null });
         localStorage.setItem("user", JSON.stringify(data.user));
         props.onLogIn();
-        navigate("/user/" + data.user.userId);
+        navigate("/");
       } else {
         setValues({ ...values, error: data.response.data.message });
       }
@@ -48,11 +48,9 @@ export default function Signin(props) {
   };
 
   return (
-    <Card className="card">
+    <Card>
       <CardContent>
-        <Typography variant="h6" className="title">
-          Sign In
-        </Typography>
+        <Typography variant="h6">Sign In</Typography>
         <TextField
           id="email"
           type="email"
@@ -60,7 +58,6 @@ export default function Signin(props) {
           value={values.email}
           onChange={handleChange("email")}
           margin="normal"
-          className="textField"
         />
         <br />
         <TextField
@@ -70,12 +67,11 @@ export default function Signin(props) {
           value={values.password}
           onChange={handleChange("password")}
           margin="normal"
-          className="textField"
         />
         <br />{" "}
         {values.error ? (
           <Typography component="p" color="error">
-            <Icon color="error" className="error">
+            <Icon color="error">
               <ErrorIcon />
             </Icon>
             {values.error}
@@ -83,12 +79,7 @@ export default function Signin(props) {
         ) : null}
       </CardContent>
       <CardActions>
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={clickSubmit}
-          className="submit"
-        >
+        <Button color="primary" variant="contained" onClick={clickSubmit}>
           Submit
         </Button>
       </CardActions>

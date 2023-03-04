@@ -4,7 +4,12 @@ const userCtrl = require("../controllers/user.controller");
 const { authenticateUser } = require("../helpers/authentication");
 
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const storage = multer.diskStorage({
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 
 const router = express.Router();
 

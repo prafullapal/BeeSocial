@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
-import DeleteIcon from "@mui/icons-material/Delete";
+import { remove } from "./api-user.js";
+import { logout } from "../auth/api-auth.js";
 
 import {
   Button,
@@ -13,9 +15,7 @@ import {
   IconButton,
 } from "@mui/material";
 
-import { remove } from "./api-user.js";
-import { logout } from "../auth/api-auth.js";
-import { useNavigate } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function DeleteUser(props) {
   let navigate = useNavigate();
