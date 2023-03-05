@@ -25,7 +25,9 @@ app.use(helmet());
 app.use(cors());
 app.use(morgan("tiny"));
 
-app.use(express.static(path.join(__dirname, "..", "dist")));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "..", "dist")));
+}
 
 // mount routes
 app.use("/", router);
@@ -34,9 +36,11 @@ app.use("/", router);
 app.use(handle_custom_error);
 app.use(page_not_found_error);
 
-app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
-});
+if (process.env.NODE_ENV === "production") {
+  app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
+  });
+}
 
 // Catch unauthorised errors
 // app.use((err, req, res, next) => {

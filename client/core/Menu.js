@@ -64,13 +64,15 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Button } from "@mui/material";
 
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
-export default function Menus() {
+export default function Menus(props) {
+  let navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
@@ -111,8 +113,28 @@ export default function Menus() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {props.isAuth && props.user && (
+        <span>
+          <MenuItem
+            onClick={() => {
+              handleMenuClose;
+              navigate(`/user/${props.user.userId}`);
+            }}
+          >
+            Profile
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              handleMenuClose;
+              props.onLogOut();
+              navigate("/");
+            }}
+          >
+            Sign Out
+          </MenuItem>
+        </span>
+      )}
     </Menu>
   );
 
@@ -133,7 +155,7 @@ export default function Menus() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      {/* <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
             <MailIcon />
@@ -152,19 +174,40 @@ export default function Menus() {
           </Badge>
         </IconButton>
         <p>Notifications</p>
+      </MenuItem> */}
+      {!props.isAuth && (
+        <span>
+          <MenuItem>
+            <Button color="inherit" onClick={() => navigate("/signup")}>
+              Sign Up
+            </Button>
+          </MenuItem>
+          <MenuItem>
+            <Button color="inherit" onClick={() => navigate("/signin")}>
+              Sign In
+            </Button>
+          </MenuItem>
+        </span>
+      )}
+      <MenuItem>
+        <Button color="inherit" onClick={() => navigate("/users")}>
+          Users
+        </Button>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+      {props.isAuth && props.user && (
+        <MenuItem onClick={handleProfileMenuOpen}>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit"
+          >
+            <AccountCircle />
+          </IconButton>
+          <p>Profile</p>
+        </MenuItem>
+      )}
     </Menu>
   );
 
@@ -181,17 +224,32 @@ export default function Menus() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            BeeSocial
-          </Typography>
+          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: "block", sm: "block" } }}
+            >
+              BeeSocial
+            </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
+            {!props.isAuth && (
+              <span>
+                <Button color="inherit" onClick={() => navigate("/signup")}>
+                  Sign Up
+                </Button>
+                <Button color="inherit" onClick={() => navigate("/signin")}>
+                  Sign In
+                </Button>
+              </span>
+            )}
+            <Button color="inherit" onClick={() => navigate("/users")}>
+              Users
+            </Button>
+            {/* <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
@@ -199,8 +257,8 @@ export default function Menus() {
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
-            </IconButton>
-            <IconButton
+            </IconButton> */}
+            {/* <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
@@ -208,18 +266,20 @@ export default function Menus() {
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            </IconButton> */}
+            {props.isAuth && props.user && (
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            )}
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

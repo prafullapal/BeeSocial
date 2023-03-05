@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { list } from "./api-user.js";
 
 import {
-  Paper,
+  Card,
+  CardContent,
   List,
   ListItem,
   ListItemAvatar,
@@ -38,37 +39,39 @@ export default function Users() {
     };
   }, []);
   return (
-    <Paper elevation={4}>
-      <Typography variant="h6">All Users</Typography>
-      <List dense>
-        {users.map((item, i) => {
-          return (
-            <Link to={"/user/" + item._id} key={i}>
-              <ListItem>
-                <ListItemAvatar>
-                  {item.photo && item.photo.data ? (
-                    <Avatar
-                      src={`/api/users/photo/${
-                        item._id
-                      }?${new Date().getTime()}`}
-                    />
-                  ) : (
-                    <Avatar>
-                      <PersonIcon />
-                    </Avatar>
-                  )}
-                </ListItemAvatar>
-                <ListItemText primary={item.name} />
-                <ListItemSecondaryAction>
-                  <IconButton>
-                    <ArrowForwardIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </Link>
-          );
-        })}
-      </List>
-    </Paper>
+    <Card>
+      <CardContent>
+        <Typography variant="h6">All Users</Typography>
+        <List dense>
+          {users.map((item, i) => {
+            return (
+              <Link to={"/user/" + item._id} key={i}>
+                <ListItem>
+                  <ListItemAvatar>
+                    {item.photo && item.photo.data ? (
+                      <Avatar
+                        src={`/api/users/photo/${
+                          item._id
+                        }?${new Date().getTime()}`}
+                      />
+                    ) : (
+                      <Avatar>
+                        <PersonIcon />
+                      </Avatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText primary={item.name} />
+                  <ListItemSecondaryAction>
+                    <IconButton>
+                      <ArrowForwardIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </Link>
+            );
+          })}
+        </List>
+      </CardContent>
+    </Card>
   );
 }
