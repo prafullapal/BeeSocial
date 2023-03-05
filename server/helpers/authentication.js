@@ -30,7 +30,6 @@ const authenticateUser = async (req, res, next) => {
     });
     (req.user = payload.user), next();
   } catch (error) {
-    console.log("Here");
     return next({
       status: 403,
       message: "Authentication Invalid",

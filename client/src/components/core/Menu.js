@@ -1,58 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-// import { AppBar, Toolbar, Typography, IconButton, Button } from "@mui/material";
-
 import HomeIcon from "@mui/icons-material/Home";
-
-// import "./../assets/css/Menu.css";
-
-// export default function Menu(props) {
-//   let navigate = useNavigate();
-//   return (
-//     <AppBar position="static">
-//       <Toolbar>
-//         <Typography variant="h6" color="inherit">
-//           BeeSocial
-//         </Typography>
-//         <Link to="/">
-//           <IconButton aria-label="Home">
-//             <HomeIcon />
-//           </IconButton>
-//         </Link>
-//         <Link to="/users">
-//           <Button color="inherit">Users</Button>
-//         </Link>
-//         {!props.isAuth && (
-//           <span>
-//             <Link to="/signup">
-//               <Button color="inherit">Sign up</Button>
-//             </Link>
-//             <Link to="/signin">
-//               <Button color="inherit">Sign In</Button>
-//             </Link>
-//           </span>
-//         )}
-//         {props.isAuth && props.user && (
-//           <span>
-//             <Link to={`/user/${props.user.userId}`}>
-//               <Button color="inherit">My Profile</Button>
-//             </Link>
-//             <Button
-//               color="inherit"
-//               onClick={() => {
-//                 props.onLogOut();
-//                 navigate("/");
-//               }}
-//             >
-//               Sign out
-//             </Button>
-//           </span>
-//         )}
-//       </Toolbar>
-//     </AppBar>
-//   );
-// }
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";

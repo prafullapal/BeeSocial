@@ -5,7 +5,7 @@ import FindPeople from "../user/FindPeople";
 
 import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 
-import unicornbikeImg from "./../assets/images/unicornbike.jpg";
+import unicornbikeImg from "./../../../assets/images/unicornbike.jpg";
 // import "./../assets/css/Home.css";
 
 export default function Home(props) {

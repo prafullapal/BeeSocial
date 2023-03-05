@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { logout, isAuthenticated } from "./auth/api-auth";
+import { logout, isAuthenticated } from "./components/auth/api-auth";
 
-import Home from "./core/Home";
-import Menu from "./core/Menu";
+import Home from "./components/core/Home";
+import Menu from "./components/core/Menu";
 
-import SignUp from "./auth/Signup";
-import Signin from "./auth/Signin";
-import VerifyEmail from "./auth/VerifyEmail";
+import SignUp from "./components/auth/Signup";
+import Signin from "./components/auth/Signin";
+import VerifyEmail from "./components/auth/VerifyEmail";
 
-import Users from "./user/Users";
-import Profile from "./user/Profile";
-import EditProfile from "./user/EditProfile";
+import Users from "./components/user/Users";
+import Profile from "./components/user/Profile";
+import EditProfile from "./components/user/EditProfile";
 
 const MainRouter = () => {
   const [isAuth, setAuth] = useState(false);

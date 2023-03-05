@@ -7,7 +7,7 @@ const buildDirectory = "/dist";
 
 module.exports = {
   mode: "development",
-  entry: "./client/main.js",
+  entry: "./client/src/index.js",
   output: {
     path: path.join(CURRENT_WORKING_DIR, buildDirectory),
     filename: "bundle.js",
@@ -34,7 +34,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ["*", ".js", ".jsx"],
+    extensions: [".*", ".js", ".jsx"],
   },
   devServer: {
     port: 3000,
