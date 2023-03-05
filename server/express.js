@@ -34,13 +34,14 @@ app.use("/", router);
 
 // 404 and other custom error handler
 app.use(handle_custom_error);
-app.use(page_not_found_error);
 
 if (process.env.NODE_ENV === "production") {
   app.use((req, res, next) => {
     res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
   });
 }
+
+app.use(page_not_found_error);
 
 // Catch unauthorised errors
 // app.use((err, req, res, next) => {
