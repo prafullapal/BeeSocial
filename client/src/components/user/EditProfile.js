@@ -18,8 +18,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import { FileUpload } from "@mui/icons-material";
 
 // import "./../assets/css/EditProfile.css";
-
-export default function EditProfile(props) {
+import { connect } from "react-redux";
+function EditProfile(props) {
   let navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
@@ -180,3 +180,12 @@ export default function EditProfile(props) {
     </Card>
   );
 }
+
+
+function mapStateToProps(state) {
+  return {
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(EditProfile);

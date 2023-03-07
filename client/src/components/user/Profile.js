@@ -26,8 +26,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import EditIcon from "@mui/icons-material/Edit";
 
 // import "./../assets/css/Profile.css";
-
-export default function Profile(props) {
+import { connect } from "react-redux";
+function Profile(props) {
   let { userId } = useParams();
   let navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -120,7 +120,7 @@ export default function Profile(props) {
               secondary={values.user.email}
             />
             <ListItemSecondaryAction>
-              {props.isAuth && props.user.userId == values.user._id ? (
+              {props.isAuthenticated && props.user.userId == values.user._id ? (
                 <ListItemSecondaryAction>
                   <Link to={"/user/edit/" + values.user._id}>
                     <IconButton aria-label="Edit" color="primary">
@@ -155,3 +155,13 @@ export default function Profile(props) {
     </>
   );
 }
+
+
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(Profile);

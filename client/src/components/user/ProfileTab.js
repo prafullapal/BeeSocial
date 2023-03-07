@@ -5,7 +5,7 @@ import PostList from "../post/PostList";
 
 import { Box, Tabs, Tab } from "@mui/material";
 
-export default function ProfileTab(props) {
+function ProfileTab(props) {
   const [value, setValue] = useState(0);
   const [posts, setPosts] = useState([]);
 
@@ -32,8 +32,6 @@ export default function ProfileTab(props) {
           <PostList
             removeUpdate={removePost}
             posts={props.posts}
-            user={props.user}
-            isAuth={props.isAuth}
           />
         ) : (
           "No Posts"
@@ -53,3 +51,5 @@ export default function ProfileTab(props) {
     </Box>
   );
 }
+
+export default ProfileTab;

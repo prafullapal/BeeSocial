@@ -22,8 +22,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
+import { connect } from "react-redux";
 
-export default function Post(props) {
+function Post(props) {
   const checkLike = (likes) => {
     let match = likes.indexOf(props.user.userId) !== -1;
     return match;
@@ -114,8 +115,6 @@ export default function Post(props) {
       </CardActions>
       <Divider />
       <Comments
-        user={props.user}
-        isAuth={props.isAuth}
         postId={props.post._id}
         comments={values.comments}
         updateComments={updateComments}
@@ -128,3 +127,13 @@ Post.propTypes = {
   post: PropTypes.object.isRequired,
   onRemove: PropTypes.func.isRequired,
 };
+
+
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(Post);

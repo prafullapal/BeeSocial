@@ -18,8 +18,9 @@ import {
 } from "@mui/material";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { connect } from "react-redux";
 
-export default function FindPeople(props) {
+function FindPeople(props) {
   const [values, setValues] = useState({
     users: [],
     open: false,
@@ -119,3 +120,11 @@ export default function FindPeople(props) {
     </>
   );
 }
+
+function mapStateToProps(state) {
+  return {
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(FindPeople);

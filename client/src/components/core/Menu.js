@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { connect } from "react-redux";
 import HomeIcon from "@mui/icons-material/Home";
 
 import AppBar from "@mui/material/AppBar";
@@ -20,7 +20,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
-export default function Menus(props) {
+function Menus(props) {
   let navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -62,7 +62,7 @@ export default function Menus(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {props.isAuth && props.user && (
+      {props.isAuthenticated && props.user && (
         <span>
           <MenuItem
             onClick={() => {
@@ -76,7 +76,7 @@ export default function Menus(props) {
           <MenuItem
             onClick={() => {
               handleMenuClose;
-              props.onLogOut();
+              // props.onLogOut();
               navigate("/");
             }}
           >
@@ -124,7 +124,7 @@ export default function Menus(props) {
         </IconButton>
         <p>Notifications</p>
       </MenuItem> */}
-      {!props.isAuth && (
+      {!props.isAuthenticated && (
         <span>
           <MenuItem>
             <Button color="inherit" onClick={() => navigate("/signup")}>
@@ -143,7 +143,7 @@ export default function Menus(props) {
           Users
         </Button>
       </MenuItem>
-      {props.isAuth && props.user && (
+      {props.isAuthenticated && props.user && (
         <MenuItem onClick={handleProfileMenuOpen}>
           <IconButton
             size="large"
@@ -185,7 +185,7 @@ export default function Menus(props) {
           </Link>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {!props.isAuth && (
+            {!props.isAuthenticated && (
               <span>
                 <Button color="inherit" onClick={() => navigate("/signup")}>
                   Sign Up
@@ -216,7 +216,7 @@ export default function Menus(props) {
                 <NotificationsIcon />
               </Badge>
             </IconButton> */}
-            {props.isAuth && props.user && (
+            {props.isAuthenticated && props.user && (
               <IconButton
                 size="large"
                 edge="end"
@@ -249,3 +249,12 @@ export default function Menus(props) {
     </Box>
   );
 }
+
+function mapStateToProps(state) {
+  return{
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(Menus);

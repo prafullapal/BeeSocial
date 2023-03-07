@@ -20,8 +20,9 @@ import {
 
 import PersonIcon from "@mui/icons-material/Person";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import { connect } from "react-redux";
 
-export default function NewPost(props) {
+function NewPost(props) {
   const [values, setValues] = useState({
     text: "",
     photo: null,
@@ -38,7 +39,7 @@ export default function NewPost(props) {
         setValues({ ...values, error: data.error });
       } else {
         setValues({ ...values, text: "", photo: null });
-        props.addUpdate(data);
+        // props.addUpdate(data);
       }
     });
   };
@@ -127,3 +128,11 @@ export default function NewPost(props) {
 NewPost.propTypes = {
   addUpdate: PropTypes.func.isRequired,
 };
+
+function mapStateToProps(state) {
+  return{
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(NewPost);

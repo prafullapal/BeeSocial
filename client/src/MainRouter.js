@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-
+import {connect } from "react-redux";
 import { logout, isAuthenticated } from "./components/auth/api-auth";
 
 import Home from "./components/core/Home";
@@ -14,50 +14,29 @@ import Users from "./components/user/Users";
 import Profile from "./components/user/Profile";
 import EditProfile from "./components/user/EditProfile";
 
-const MainRouter = () => {
-  const [isAuth, setAuth] = useState(false);
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    handleLogIn();
-  }, []);
-  const handleLogIn = () => {
-    isAuthenticated().then((data) => {
-      if (data.isLoggedIn === false) setAuth(false);
-      else {
-        setAuth(true);
-        setUser(data.user);
-      }
-    });
-  };
-  const handleLogOut = () => {
-    setAuth(false);
-    setUser(null);
-    logout();
-    localStorage.removeItem("user");
-  };
-
+const MainRouter = (props) => {
   function PrivateRoute({ children }) {
-    return isAuth && user ? children : null;
+    return props.isAuthenticated && props.user ? children : null;
   }
 
   return (
     <>
-      <Menu isAuth={isAuth} user={user} onLogOut={handleLogOut} />
+      <Menu />
       <Routes>
-        <Route path="/" element={<Home isAuth={isAuth} user={user} />} />
+        <Route path="/" element={<Home />} />
         <Route path="/users" element={<Users />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/signin" element={<Signin onLogIn={handleLogIn} />} />
+        <Route path="/signin" element={<Signin />} />
         <Route
           path="/user/:userId"
-          element={<Profile user={user} isAuth={isAuth} />}
+          element={<Profile />}
         />
         <Route
           path="/user/edit/:userId"
           element={
             <PrivateRoute>
-              <EditProfile user={user} isAuth={isAuth} />
+              <EditProfile />
             </PrivateRoute>
           }
         />
@@ -66,4 +45,11 @@ const MainRouter = () => {
   );
 };
 
-export default MainRouter;
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(MainRouter);

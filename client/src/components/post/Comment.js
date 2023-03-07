@@ -6,8 +6,9 @@ import { comment, uncomment } from "./api-post";
 import { Avatar, CardHeader, TextField, IconButton } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
+import { connect } from "react-redux";
 
-export default function Comments(props) {
+function Comments(props) {
   const [text, setText] = useState("");
 
   const addComment = (event) => {
@@ -93,3 +94,11 @@ export default function Comments(props) {
     </div>
   );
 }
+
+function mapStateToProps(state) {
+  return {
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(Comments);

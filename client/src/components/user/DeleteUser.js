@@ -16,8 +16,9 @@ import {
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
+import { connect } from "react-redux";
 
-export default function DeleteUser(props) {
+function DeleteUser(props) {
   let navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [redirect, setRedirct] = useState(false);
@@ -34,7 +35,7 @@ export default function DeleteUser(props) {
         setError(data.error);
       } else {
         logout().then(() => console.log("Deleted Successfully!"));
-        props.onLogOut();
+        // props.onLogOut();
         setRedirct(true);
       }
     });
@@ -77,3 +78,12 @@ export default function DeleteUser(props) {
 DeleteUser.propTypes = {
   user: PropTypes.object.isRequired,
 };
+
+
+function mapStateToProps(state) {
+  return {
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(DeleteUser);

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { login } from "./api-auth.js";
+import {connect } from "react-redux";
+import { loginRequest, loginUser } from "../../../actions/authActions.js"; 
 
 import {
   Card,
@@ -17,12 +18,11 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 // import "./../assets/css/Signin.css";
 
-export default function Signin(props) {
+function Signin(props) {
   let navigate = useNavigate();
   const [values, setValues] = useState({
     email: "",
     password: "",
-    error: null,
   });
 
   const clickSubmit = () => {
@@ -31,16 +31,9 @@ export default function Signin(props) {
       password: values.password || undefined,
     };
 
-    login(user).then((data) => {
-      if (data.user) {
-        setValues({ ...values, error: null });
-        localStorage.setItem("user", JSON.stringify(data.user));
-        props.onLogIn();
-        navigate("/");
-      } else {
-        setValues({ ...values, error: data.response.data.message });
-      }
-    });
+    props.loginUser(user);
+    console.log(props.user);
+    navigate("/");
   };
 
   const handleChange = (name) => (event) => {
@@ -68,8 +61,8 @@ export default function Signin(props) {
           onChange={handleChange("password")}
           margin="normal"
         />
-        <br />{" "}
-        {values.error ? (
+        <br />
+        {props.error ? (
           <Typography component="p" color="error">
             <Icon color="error">
               <ErrorIcon />
@@ -79,10 +72,27 @@ export default function Signin(props) {
         ) : null}
       </CardContent>
       <CardActions>
-        <Button color="primary" variant="contained" onClick={clickSubmit}>
+        {!props.isLoading ? <Button color="primary" variant="contained" onClick={clickSubmit}>
           Submit
-        </Button>
+        </Button>: "Loading..."}
       </CardActions>
     </Card>
   );
 }
+
+function mapStateToProps(state) {
+  return {
+    isLoading: state.auth.isLoading,
+    error: state.auth.error,
+    user: state.auth.user,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginUser: (user) => dispatch(loginUser(user)),
+    loginRequest: () => dispatch(loginRequest()),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signin);

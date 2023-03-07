@@ -6,8 +6,9 @@ import PostList from "./PostList";
 import NewPost from "./NewPost";
 
 import { Typography, Paper } from "@mui/material";
+import { connect } from "react-redux";
 
-export default function Newsfeed(props) {
+function Newsfeed(props) {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     const abortController = new AbortController();
@@ -54,3 +55,12 @@ export default function Newsfeed(props) {
     </Paper>
   );
 }
+
+
+function mapStateToProps(state) {
+  return {
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps)(Newsfeed);
