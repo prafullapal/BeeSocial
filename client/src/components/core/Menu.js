@@ -19,6 +19,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { logoutUser } from "../../../actions/authActions";
 
 function Menus(props) {
   let navigate = useNavigate();
@@ -76,7 +77,7 @@ function Menus(props) {
           <MenuItem
             onClick={() => {
               handleMenuClose;
-              // props.onLogOut();
+              props.logoutUser();
               navigate("/");
             }}
           >
@@ -257,4 +258,10 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(Menus);
+function mapDispatchToProps(dispatch) {
+  return {
+    logoutUser: () => dispatch(logoutUser()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menus);

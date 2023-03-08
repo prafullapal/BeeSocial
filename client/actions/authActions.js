@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOGIN_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST,LOGOUT_REQUEST, LOGOUT_SUCCESS } from "./actionTypes";
+import { LOGIN_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST,LOGOUT_REQUEST, LOGOUT_SUCCESS,LOGOUT_FAILURE } from "./actionTypes";
 export function loginRequest() {
     return {
       type: LOGIN_REQUEST,
@@ -32,6 +32,13 @@ export function loginRequest() {
     };
   }
 
+  export function logoutFailure(error) {
+    return {
+      type: LOGOUT_FAILURE,
+      payload: error,
+    };
+  }
+
   export function loginUser(user) { 
     return async (dispatch) => {
       dispatch(loginRequest());
@@ -45,6 +52,19 @@ export function loginRequest() {
         dispatch(loginSuccess(response.data.user));
       } catch (err) {
         dispatch(loginFailure(err));
+      }
+    }
+  }
+
+  export function logoutUser(user) {
+    return async (dispatch) => {
+      dispatch(logoutRequest());
+      try {
+        let response = await axios.get("/api/auth/logout");
+        console.log(response.data);
+        dispatch(logoutSuccess());
+      } catch (err) {
+        dispatch(logoutFailure(err));
       }
     }
   }
