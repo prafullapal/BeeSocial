@@ -5,7 +5,10 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 
-const App = () => {
+import { connect } from "react-redux";
+
+const App = (props) => {
+  console.log(props.data);
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
@@ -14,5 +17,9 @@ const App = () => {
     </BrowserRouter>
   );
 };
-
-export default App;
+function mapStateToProps(state) {
+  return {
+    data: state,
+  }
+}
+export default connect(mapStateToProps)(App);

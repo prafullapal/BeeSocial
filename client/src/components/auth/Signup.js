@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { register } from "./api-auth.js";
-
 import {
   Button,
   Card,
@@ -17,16 +15,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { connect } from "react-redux";
+import { signupUser } from "../../../actions/signupAction.js";
 
 // import "./../assets/css/Signup.css";
 
-export default function Signup() {
+function Signup(props) {
   const [values, setValues] = useState({
     name: "",
     password: "",
     email: "",
     open: false,
-    error: "",
   });
 
   const handleChange = (name) => (event) => {
@@ -39,13 +38,9 @@ export default function Signup() {
       name: values.name || undefined,
       password: values.password || undefined,
     };
-    register(user).then((data) => {
-      if (data && data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        setValues({ ...values, error: "", open: true });
-      }
-    });
+    props.signupUser(user);
+    props.msg ? setValues({...values, open:true}): null;
+    console.log("SignUp message:: ",props.msg);
   };
 
   return (
@@ -79,10 +74,16 @@ export default function Signup() {
             margin="normal"
           />
           <br />{" "}
-          {values.error && (
+          {props.error && (
             <Typography component="p" color="error">
               <Icon color="error">error</Icon>
-              {values.error}
+              {props.error}
+            </Typography>
+          )}
+          {props.msg && (
+            <Typography component="p" color="error">
+              <Icon color="error">error</Icon>
+              {props.msg}
             </Typography>
           )}
         </CardContent>
@@ -92,7 +93,7 @@ export default function Signup() {
           </Button>
         </CardActions>
       </Card>
-      <Dialog open={values.open} disableBackdropClick={true}>
+      <Dialog open={props.msg ? true : false} disableBackdropClick={true}>
         <DialogTitle>New Account</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -110,3 +111,20 @@ export default function Signup() {
     </div>
   );
 }
+
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    msg: state.signup.msg,
+    isLoading: state.signup.isLoading,
+    error: state.signup.error,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signupUser: (user)=> dispatch(signupUser(user)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

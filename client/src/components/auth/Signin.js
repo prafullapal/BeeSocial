@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import {connect } from "react-redux";
 import { loginRequest, loginUser } from "../../../actions/authActions.js"; 
-
+import { Navigate } from "react-router-dom";
 import {
   Card,
   CardActions,
@@ -19,7 +18,6 @@ import ErrorIcon from "@mui/icons-material/Error";
 // import "./../assets/css/Signin.css";
 
 function Signin(props) {
-  let navigate = useNavigate();
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -32,8 +30,6 @@ function Signin(props) {
     };
 
     props.loginUser(user);
-    console.log(props.user);
-    navigate("/");
   };
 
   const handleChange = (name) => (event) => {
@@ -67,10 +63,11 @@ function Signin(props) {
             <Icon color="error">
               <ErrorIcon />
             </Icon>
-            {values.error}
+            {props.error.message}
           </Typography>
         ) : null}
       </CardContent>
+      {props.isAuthenticated ?  <Navigate to="/" replace={true} />: null}
       <CardActions>
         {!props.isLoading ? <Button color="primary" variant="contained" onClick={clickSubmit}>
           Submit
@@ -85,6 +82,7 @@ function mapStateToProps(state) {
     isLoading: state.auth.isLoading,
     error: state.auth.error,
     user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated,
   }
 }
 

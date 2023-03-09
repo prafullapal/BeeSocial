@@ -7,7 +7,6 @@ const initialState = {
   };
 
   export default function authReducer(state = initialState, action) {
-    console.log(initialState)
     switch (action.type) {
       case LOGIN_REQUEST:
         return {
@@ -15,7 +14,6 @@ const initialState = {
           isLoading: true,
         };
       case LOGIN_SUCCESS:
-        localStorage.setItem("user", JSON.stringify(action.payload));
         return {
           ...state,
           user: action.payload,
@@ -35,7 +33,6 @@ const initialState = {
           isLoading: true,
         };
       case LOGOUT_SUCCESS:
-        localStorage.removeItem("user");
         return {
           ...state,
           user: null,

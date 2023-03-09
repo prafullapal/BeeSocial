@@ -14,29 +14,6 @@ const register = async (user) => {
   }
 };
 
-const login = async (user) => {
-  try {
-    let response = await axios.post("/api/auth/login", user, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-    return await response.data;
-  } catch (err) {
-    return { error: err };
-  }
-};
-
-const logout = async () => {
-  try {
-    let response = await axios.get("/api/auth/logout");
-    return await response.data;
-  } catch (err) {
-    return { error: err };
-  }
-};
-
 const verifyEmail = async (userToken) => {
   try {
     let response = await axios.post("/api/auth/verify-email", userToken, {
@@ -56,4 +33,4 @@ const isAuthenticated = async () => {
   return user ? { isLoggedIn: true, user: user } : { isLoggedIn: false };
 };
 
-export { register, login, logout, verifyEmail, isAuthenticated };
+export { register, verifyEmail, isAuthenticated };

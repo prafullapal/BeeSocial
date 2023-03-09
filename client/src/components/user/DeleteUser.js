@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 import { remove } from "./api-user.js";
-import { logout } from "../auth/api-auth.js";
 
 import {
   Button,
@@ -34,8 +33,7 @@ function DeleteUser(props) {
       if (data && data.error) {
         setError(data.error);
       } else {
-        logout().then(() => console.log("Deleted Successfully!"));
-        // props.onLogOut();
+        props.logoutUser().then(()=> console.log("Deleted Successfully!"));
         setRedirct(true);
       }
     });
@@ -86,4 +84,10 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(DeleteUser);
+function mapDispatchToProps(dispatch) {
+  return {
+    logoutUser: () => dispatch(logoutUser()),
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(DeleteUser);
