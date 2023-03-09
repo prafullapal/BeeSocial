@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import {connect } from "react-redux";
-import { logout, isAuthenticated } from "./components/auth/api-auth";
 
 import Home from "./components/core/Home";
 import Menu from "./components/core/Menu";

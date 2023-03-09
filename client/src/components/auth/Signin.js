@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import {connect } from "react-redux";
-import { loginRequest, loginUser } from "../../../actions/authActions.js"; 
+import { connect } from "react-redux";
+import { loginUser } from "../../../actions/authActions.js";
 import { Navigate } from "react-router-dom";
 import {
   Card,
@@ -67,11 +67,15 @@ function Signin(props) {
           </Typography>
         ) : null}
       </CardContent>
-      {props.isAuthenticated ?  <Navigate to="/" replace={true} />: null}
+      {props.isAuthenticated ? <Navigate to="/" replace={true} /> : null}
       <CardActions>
-        {!props.isLoading ? <Button color="primary" variant="contained" onClick={clickSubmit}>
-          Submit
-        </Button>: "Loading..."}
+        {!props.isLoading ? (
+          <Button color="primary" variant="contained" onClick={clickSubmit}>
+            Submit
+          </Button>
+        ) : (
+          "Loading..."
+        )}
       </CardActions>
     </Card>
   );
@@ -83,14 +87,13 @@ function mapStateToProps(state) {
     error: state.auth.error,
     user: state.auth.user,
     isAuthenticated: state.auth.isAuthenticated,
-  }
+  };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     loginUser: (user) => dispatch(loginUser(user)),
-    loginRequest: () => dispatch(loginRequest()),
-  }
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signin);

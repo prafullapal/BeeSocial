@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { verifyEmail } from "./api-auth";
+import {connect} from "react-redux";
+
+import { verifyEmail } from "../../../actions/signupAction";
 
 function VerifyEmail(props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const email = searchParams.get("email");
   const token = searchParams.get("token");
   useEffect(() => {
-    verifyEmail({ email, token });
+    console.log(email,token)
+    props.verifyEmail({ email, token });
   }, []);
 
   return (<>
-  {props.Loading && <div>Loading...</div>}
+  {props.isLoading && <div>Loading...</div>}
   <div>{props.msg}</div>
   {props.error && <div>{props.error}</div>}
   </>
