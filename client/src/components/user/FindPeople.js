@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect } from "react";
 import { Link } from "react-router-dom";
-import { findPeople, follow } from "./api-user";
 
 import {
   Avatar,
@@ -18,56 +17,22 @@ import {
 } from "@mui/material";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { findPeople, follow } from "../../../actions/userActions";
 import { connect } from "react-redux";
 
 function FindPeople(props) {
-  const [values, setValues] = useState({
-    users: [],
-    open: false,
-    followMessage: "",
-    error: null,
-  });
-
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
 
-    findPeople(
+    props.findPeople(
       {
         userId: props.user.userId,
-      },
-      signal
-    ).then((data) => {
-      if (data && data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        setValues({ ...values, users: data });
       }
-    });
-    return function cleanup() {
-      abortController.abort();
-    };
+    );
   }, []);
 
-  const clickFollow = (user, index) => {
-    follow(user._id).then((data) => {
-      if (data && data.error) {
-        setValues({ ...values, error: data.error });
-      } else {
-        let toFollow = values.users;
-        toFollow.splice(index, 1);
-        setValues({
-          ...values,
-          users: toFollow,
-          open: true,
-          followMessage: `Following ${user.name}!`,
-        });
-      }
-    });
-  };
-
-  const handleRequestClose = () => {
-    setValues({ ...values, open: false, followMessage: "" });
+  const clickFollow = async (user, index) => {
+    await props.follow(user._id);
+    await props.findPeople({userId: props.user.userId})
   };
 
   return (
@@ -78,7 +43,7 @@ function FindPeople(props) {
         </Typography>
         <Divider />
         <List>
-          {values.users.map((item, i) => {
+          {props.followPeople ? props.followPeople.map((item, i) => {
             return (
               <span key={i}>
                 <ListItem>
@@ -106,17 +71,17 @@ function FindPeople(props) {
                 </ListItem>
               </span>
             );
-          })}
+          }): null}
         </List>
       </Paper>
 
-      <Snackbar
+      {/* <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={values.open}
         onClose={handleRequestClose}
         autoHideDuration={6000}
         message={<span>{values.followMessage}</span>}
-      />
+      /> */}
     </>
   );
 }
@@ -124,7 +89,15 @@ function FindPeople(props) {
 function mapStateToProps(state) {
   return {
     user: state.auth.user,
+    followPeople: state.user.findPeople,
   }
 }
 
-export default connect(mapStateToProps)(FindPeople);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    findPeople: (params) => dispatch(findPeople(params)),
+    follow: (id) => dispatch(follow(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FindPeople);

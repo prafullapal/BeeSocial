@@ -108,14 +108,18 @@ const addFollowing = async (req, res, next) => {
     if (req.body.followId) {
       let user = await User.findByIdAndUpdate(req.user.userId, {
         $push: { following: req.body.followId },
-      });
+      })
+        .select("-password -verificationToken -photo")
+        .populate("following", "_id name")
+        .populate("followers", "_id name")
+        .exec();
+      res.status(200).json(user);
     } else {
       return next({
         status: 404,
         message: "No such user found",
       });
     }
-    next();
   } catch (err) {
     return next(err);
   }
@@ -130,18 +134,14 @@ const addFollower = async (req, res, next) => {
           $push: { followers: req.user.userId },
         },
         { new: true }
-      )
-        .select("-password -verificationToken -photo")
-        .populate("following", "_id name")
-        .populate("followers", "_id name")
-        .exec();
-      res.status(200).json(result);
+      );
     } else {
       return next({
         status: 404,
         message: "No such user found",
       });
     }
+    next();
   } catch (err) {
     return next(err);
   }
@@ -152,14 +152,18 @@ const removeFollowing = async (req, res, next) => {
     if (req.body.unfollowId) {
       let user = await User.findByIdAndUpdate(req.user.userId, {
         $pull: { following: req.body.unfollowId },
-      }).select("-password -verificationToken -photo");
+      })
+        .select("-password -verificationToken -photo")
+        .populate("following", "_id name")
+        .populate("followers", "_id name")
+        .exec();
+      res.status(200).json(user);
     } else {
       return next({
         status: 404,
         message: "No such user found",
       });
     }
-    next();
   } catch (err) {
     return next(err);
   }
@@ -174,18 +178,14 @@ const removeFollower = async (req, res, next) => {
           $pull: { followers: req.user.userId },
         },
         { new: true }
-      )
-        .select("-password -verificationToken -photo")
-        .populate("following", "_id name")
-        .populate("followers", "_id name")
-        .exec();
-      res.status(200).json(result);
+      );
     } else {
       return next({
         status: 404,
         message: "No such user found",
       });
     }
+    next();
   } catch (err) {
     return next(err);
   }

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
-
-import { remove } from "./api-user.js";
+import { Navigate } from "react-router-dom";
 
 import {
   Button,
@@ -16,35 +14,23 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import { connect } from "react-redux";
+import { removeUser } from "../../../actions/userActions.js";
 
 function DeleteUser(props) {
-  let navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [redirect, setRedirct] = useState(false);
-  const [error, setError] = useState(null);
 
   const clickButton = () => {
     setOpen(true);
   };
   const deleteAccount = () => {
-    remove({
+    props.removeUser({
       userId: props.user.userId,
-    }).then((data) => {
-      if (data && data.error) {
-        setError(data.error);
-      } else {
-        props.logoutUser().then(()=> console.log("Deleted Successfully!"));
-        setRedirct(true);
-      }
     });
   };
   const handleRequestClose = () => {
     setOpen(false);
   };
 
-  if (redirect) {
-    return navigate("/");
-  }
   return (
     <span>
       <IconButton aria-label="Delete" onClick={clickButton} color="secondary">
@@ -69,6 +55,7 @@ function DeleteUser(props) {
           </Button>
         </DialogActions>
       </Dialog>
+      {props.msg ?  <Navigate to="/" replace={true} />: null}
     </span>
   );
 }
@@ -81,12 +68,17 @@ DeleteUser.propTypes = {
 function mapStateToProps(state) {
   return {
     user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated,
+    isLoading: state.user.isLoading,
+    error: state.user.error,
+    msg: state.user.msg,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     logoutUser: () => dispatch(logoutUser()),
+    removeUser: (params) => dispatch(removeUser(params)),
   }
 }
 

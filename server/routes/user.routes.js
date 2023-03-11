@@ -17,11 +17,11 @@ router.route("/list").get(userCtrl.list);
 
 router
   .route("/follow")
-  .put(authenticateUser, userCtrl.addFollowing, userCtrl.addFollower);
+  .put(authenticateUser, userCtrl.addFollower, userCtrl.addFollowing );
 
 router
   .route("/unfollow")
-  .put(authenticateUser, userCtrl.removeFollowing, userCtrl.removeFollower);
+  .put(authenticateUser, userCtrl.removeFollower, userCtrl.removeFollowing);
 
 router.route("/findPeople/:userId").get(authenticateUser, userCtrl.findPeople);
 

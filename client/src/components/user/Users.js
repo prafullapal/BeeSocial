@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { list } from "./api-user.js";
-
 import {
   Card,
   CardContent,
@@ -19,20 +17,18 @@ import {
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PersonIcon from "@mui/icons-material/Person";
 
-export default function Users() {
+import { connect } from "react-redux";
+
+import { listUser } from "../../../actions/userActions.js";
+
+function Users(props) {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
-    list(signal).then((data) => {
-      if (data && data.error) {
-        setError(data.error);
-      } else {
-        setUsers(data);
-      }
-    });
+    props.listUser();
 
     return function cleanup() {
       abortController.abort();
@@ -43,7 +39,7 @@ export default function Users() {
       <CardContent>
         <Typography variant="h6">All Users</Typography>
         <List dense>
-          {users.map((item, i) => {
+          {props.usersList ? props.usersList.map((item, i) => {
             return (
               <Link to={"/user/" + item._id} key={i}>
                 <ListItem>
@@ -69,9 +65,23 @@ export default function Users() {
                 </ListItem>
               </Link>
             );
-          })}
+          }): null}
         </List>
       </CardContent>
     </Card>
   );
 }
+
+function mapStateToProps(state) {
+  return {
+    usersList: state.user.list
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    listUser: ()=> dispatch(listUser()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Users);
