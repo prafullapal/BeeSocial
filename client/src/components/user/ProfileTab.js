@@ -4,7 +4,12 @@ import PostList from "../post/PostList";
 
 import { connect } from "react-redux";
 
-import { unfollow } from "../../../actions/userActions";
+import {
+  findPeople,
+  follow,
+  readUser,
+  unfollow,
+} from "../../../actions/userActions";
 import { listByUser } from "../../../actions/postActions";
 import PeopleCard from "./PeopleCard";
 
@@ -19,8 +24,14 @@ function ProfileTab(props) {
 
   const clickUnfollow = async (user) => {
     await props.unfollow(user._id);
+    await props.findPeople({ userId: props.user.userId });
+    await props.readUser({ userId: props.userId });
   };
-
+  const clickFollow = async (user) => {
+    await props.follow(user._id);
+    await props.findPeople({ userId: props.user.userId });
+    await props.readUser({ userId: props.userId });
+  };
   return (
     <Tab.Group as="div" className="divide-y">
       <Tab.List className="grid grid-cols-3 gap-2 w-full">
@@ -56,10 +67,7 @@ function ProfileTab(props) {
                 <PeopleCard
                   key={idx}
                   people={people}
-                  callback={
-                    props.userId == props.user.userId ? clickUnfollow : null
-                  }
-                  btn="unfollow"
+                  callback={people.following ? clickUnfollow : clickFollow}
                 />
               );
             })}
@@ -80,10 +88,7 @@ function ProfileTab(props) {
                 <PeopleCard
                   key={idx}
                   people={people}
-                  callback={
-                    props.userId == props.user.userId ? clickUnfollow : null
-                  }
-                  btn="unfollow"
+                  callback={people.following ? clickUnfollow : clickFollow}
                 />
               );
             })}
@@ -120,6 +125,7 @@ const mapDispatchToProps = (dispatch) => {
     unfollow: (id) => dispatch(unfollow(id)),
     readUser: (params) => dispatch(readUser(params)),
     listByUser: (params) => dispatch(listByUser(params)),
+    findPeople: (params) => dispatch(findPeople(params)),
   };
 };
 

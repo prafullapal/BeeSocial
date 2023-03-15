@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 
 function PeopleCard(props) {
   return (
@@ -16,14 +17,14 @@ function PeopleCard(props) {
           <p className="text-sm text-gray-400">{props.people._id}</p>
         </div>
       </div>
-      {props.callback && (
+      {props.callback && props.people._id !== props.user.userId && (
         <div className="px-2">
           {/* Follow/Unfollow Button */}
           <button
             className="bg-violet-500 rounded-md py-1 px-2 text-gray-50"
             onClick={() => props.callback(props.people)}
           >
-            {props.btn === "follow" ? "Follow" : "Unfollow"}
+            {props.people.following ? "Unfollow" : "Follow"}
           </button>
         </div>
       )}
@@ -31,4 +32,10 @@ function PeopleCard(props) {
   );
 }
 
-export default PeopleCard;
+function mapStateToProps(state) {
+  return {
+    user: state.auth.user,
+  };
+}
+
+export default connect(mapStateToProps)(PeopleCard);

@@ -8,6 +8,22 @@ const checkFollow = (user, userId) => {
   return match;
 };
 
+const checkFollowing = (user, list) => {
+  const updatedUser = JSON.parse(JSON.stringify(user));
+
+  updatedUser.followers.map((v) => {
+    v.following = list.includes(v._id);
+    return v;
+  });
+
+  updatedUser.following.map((v) => {
+    v.following = list.includes(v._id);
+    return v;
+  });
+
+  return updatedUser;
+};
+
 const read = async (req, res, next) => {
   try {
     let user = await User.findOne({ _id: req.params.userId })
@@ -23,6 +39,10 @@ const read = async (req, res, next) => {
     }
 
     let following = checkFollow(user, req.user.userId);
+    let currentUser = await User.findOne({ _id: req.user.userId })
+      .select("-password -verificationToken -photo")
+      .exec();
+    user = checkFollowing(user, currentUser.following);
     res.status(200).json({ user, following: following });
   } catch (err) {
     return next(err);
