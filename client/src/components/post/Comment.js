@@ -14,6 +14,7 @@ function Comments(props) {
       },
       { text: text }
     );
+    setText("");
   };
 
   const deleteComment = (comment) => {

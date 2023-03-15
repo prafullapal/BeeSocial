@@ -37,6 +37,15 @@ const initialState = {
   post: null,
 };
 
+function checkId(arr, item) {
+  const index = arr.findIndex((obj) => obj._id === item._id);
+  console.log(index);
+  if (index > -1) {
+    arr.splice(index, 1, item);
+  }
+  return arr;
+}
+
 export default function postReducer(state = initialState, action) {
   let updatedPosts = [];
   switch (action.type) {
@@ -141,8 +150,7 @@ export default function postReducer(state = initialState, action) {
       };
     case LIKE_SUCCESS:
       updatedPosts = [...state.feed];
-      index = updatedPosts.indexOf(action.payload);
-      updatedPosts.splice(index, 1, action.payload);
+      updatedPosts = checkId(updatedPosts, action.payload);
       return {
         ...state,
         isLoading: false,
@@ -161,8 +169,7 @@ export default function postReducer(state = initialState, action) {
       };
     case UNLIKE_SUCCESS:
       updatedPosts = [...state.feed];
-      index = updatedPosts.indexOf(action.payload);
-      updatedPosts.splice(index, 1, action.payload);
+      updatedPosts = checkId(updatedPosts, action.payload);
       return {
         ...state,
         isLoading: false,
@@ -181,8 +188,7 @@ export default function postReducer(state = initialState, action) {
       };
     case COMMENT_SUCCESS:
       updatedPosts = [...state.feed];
-      index = updatedPosts.indexOf(action.payload);
-      updatedPosts.splice(index, 1, action.payload);
+      updatedPosts = checkId(updatedPosts, action.payload);
       return {
         ...state,
         isLoading: false,
@@ -201,8 +207,7 @@ export default function postReducer(state = initialState, action) {
       };
     case UNCOMMENT_SUCCESS:
       updatedPosts = [...state.feed];
-      index = updatedPosts.indexOf(action.payload);
-      updatedPosts.splice(index, 1, action.payload);
+      updatedPosts = checkId(updatedPosts, action.payload);
       return {
         ...state,
         isLoading: false,
