@@ -23,7 +23,7 @@ import {
 } from "../actions/actionTypes";
 
 const initialState = {
-  list:null,
+  list: null,
   error: null,
   isLoading: false,
   msg: null,
@@ -36,7 +36,7 @@ const initialState = {
 };
 
 export default function userReducer(state = initialState, action) {
-  console.log(action.type,"::",action.payload);
+  console.log(action.type, "::", action.payload);
   switch (action.type) {
     case USER_DETAILS_REQUEST:
       return {

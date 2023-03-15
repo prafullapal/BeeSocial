@@ -1,30 +1,17 @@
-import React, { useState, useEffect } from "react";
-
-import { listNewsFeed } from "./api-post";
-
-import PostList from "./PostList";
-import NewPost from "./NewPost";
-
-import { Typography, Paper } from "@mui/material";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
+import PostList from "./PostList";
+
+import { listNewsFeed } from "../../../actions/postActions";
+
 function Newsfeed(props) {
-  const [posts, setPosts] = useState([]);
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
-    listNewsFeed(
-      {
-        userId: props.user.userId,
-      },
-      signal
-    ).then((data) => {
-      if (data && data.error) {
-        console.log(data.error);
-      } else {
-        setPosts(data);
-      }
+    props.listNewsFeed({
+      userId: props.user.userId,
     });
 
     return function cleanup() {
@@ -32,35 +19,28 @@ function Newsfeed(props) {
     };
   }, []);
 
-  const addPost = (post) => {
-    const updatedPosts = [...posts];
-    updatedPosts.unshift(post);
-    setPosts(updatedPosts);
-  };
-
-  const removePost = (post) => {
-    const updatedPosts = [...posts];
-    const index = updatedPosts.indexOf(post);
-    updatedPosts.splice(index, 1);
-    setPosts(updatedPosts);
-  };
-
   return (
-    <Paper elevation={3} sx={{ padding: "10px" }}>
-      <Typography type="title" variant="h6">
-        NewsFeed
-      </Typography>
-      <NewPost {...props} addUpdate={addPost} />
-      <PostList {...props} removeUpdate={removePost} posts={posts} />
-    </Paper>
+    <>
+      <p className="p-4 text-xl text-gray-800">News Feed</p>
+      <div
+        id="postCards"
+        className="grid grid-flow-row gap-4 auto-rows-max p-4"
+      >
+        <PostList posts={props.feed} />
+      </div>
+    </>
   );
 }
-
 
 function mapStateToProps(state) {
   return {
     user: state.auth.user,
-  }
+    feed: state.posts.feed,
+  };
 }
-
-export default connect(mapStateToProps)(Newsfeed);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    listNewsFeed: (params) => dispatch(listNewsFeed(params)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Newsfeed);

@@ -1,267 +1,204 @@
-import React, { useState } from "react";
+import React, { Fragment } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import HomeIcon from "@mui/icons-material/Home";
-
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-
-import Badge from "@mui/material/Badge";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import { Button } from "@mui/material";
-
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import MoreIcon from "@mui/icons-material/MoreVert";
 import { logoutUser } from "../../../actions/authActions";
+
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+
+import {
+  UserCircleIcon,
+  Cog6ToothIcon,
+  LifebuoyIcon,
+  PowerIcon,
+  PencilIcon,
+} from "@heroicons/react/24/outline";
 
 function Menus(props) {
   let navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      {props.isAuthenticated && props.user && (
-        <span>
-          <MenuItem
-            onClick={() => {
-              handleMenuClose;
-              navigate(`/user/${props.user.userId}`);
-            }}
-          >
-            Profile
-          </MenuItem>
-
-          <MenuItem
-            onClick={() => {
-              handleMenuClose;
-              props.logoutUser();
-              navigate("/");
-            }}
-          >
-            Sign Out
-          </MenuItem>
-        </span>
-      )}
-    </Menu>
-  );
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      {/* <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem> */}
-      {!props.isAuthenticated && (
-        <span>
-          <MenuItem>
-            <Button color="inherit" onClick={() => navigate("/signup")}>
-              Sign Up
-            </Button>
-          </MenuItem>
-          <MenuItem>
-            <Button color="inherit" onClick={() => navigate("/signin")}>
-              Sign In
-            </Button>
-          </MenuItem>
-        </span>
-      )}
-      <MenuItem>
-        <Button color="inherit" onClick={() => navigate("/users")}>
-          Users
-        </Button>
-      </MenuItem>
-      {props.isAuthenticated && props.user && (
-        <MenuItem onClick={handleProfileMenuOpen}>
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            color="inherit"
-          >
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
-      )}
-    </Menu>
-  );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: { xs: "block", sm: "block" } }}
+    <nav
+      className={`bg-gray-200 md:px-30 lg:px-60 ${
+        props.isAuthenticated ? "" : "hidden"
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="p-4">
+          {/* logo */}
+          <p className="text-2xl font-bold text-indigo-500">BeeSocial.</p>
+        </div>
+        <div className="p-4 flex space-x-2 items-center">
+          {/* search */}
+          <button>search</button>
+          <Menu as="div" className="relative inline-block text-left">
+            <div>
+              <Menu.Button className="inline-flex w-full items-center justify-center rounded-full bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                <img
+                  className="w-8 rounded-full border-2 border-violet-100"
+                  src="https://tecdn.b-cdn.net/img/new/avatars/2.webp"
+                  alt="Image"
+                />
+
+                <ChevronDownIcon
+                  className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
+                  aria-hidden="true"
+                />
+              </Menu.Button>
+            </div>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
             >
-              BeeSocial
-            </Typography>
-          </Link>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {!props.isAuthenticated && (
-              <span>
-                <Button color="inherit" onClick={() => navigate("/signup")}>
-                  Sign Up
-                </Button>
-                <Button color="inherit" onClick={() => navigate("/signin")}>
-                  Sign In
-                </Button>
-              </span>
-            )}
-            <Button color="inherit" onClick={() => navigate("/users")}>
-              Users
-            </Button>
-            {/* <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-            >
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton> */}
-            {/* <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
-            {props.isAuthenticated && props.user && (
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            )}
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+              <Menu.Items className="absolute z-10 right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="px-1 py-1 ">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "bg-violet-500 text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        onClick={() => {
+                          navigate(`/user/${props.user.userId}`);
+                        }}
+                      >
+                        {active ? (
+                          <UserCircleIcon
+                            className="mr-2 h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <UserCircleIcon
+                            className="mr-2 h-5 w-5 text-violet-500"
+                            aria-hidden="true"
+                          />
+                        )}
+                        My Profile
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "bg-violet-500 text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        {active ? (
+                          <PencilIcon
+                            className="mr-2 h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <PencilIcon
+                            className="mr-2 h-5 w-5 text-violet-500"
+                            aria-hidden="true"
+                          />
+                        )}
+                        Edit Profile
+                      </button>
+                    )}
+                  </Menu.Item>
+                </div>
+                <div className="px-1 py-1">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "bg-violet-500 text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        {active ? (
+                          <LifebuoyIcon
+                            className="mr-2 h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <LifebuoyIcon
+                            className="mr-2 h-5 w-5 text-violet-500"
+                            aria-hidden="true"
+                          />
+                        )}
+                        Help
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "bg-violet-500 text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        {active ? (
+                          <Cog6ToothIcon
+                            className="mr-2 h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <Cog6ToothIcon
+                            className="mr-2 h-5 w-5 text-violet-500"
+                            aria-hidden="true"
+                          />
+                        )}
+                        Settings
+                      </button>
+                    )}
+                  </Menu.Item>
+                </div>
+                <div className="px-1 py-1">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "bg-violet-500 text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        onClick={() => {
+                          props.logoutUser();
+                          navigate("/");
+                        }}
+                      >
+                        {active ? (
+                          <PowerIcon
+                            className="mr-2 h-5 w-5 text-violet-400"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <PowerIcon
+                            className="mr-2 h-5 w-5 text-violet-400"
+                            aria-hidden="true"
+                          />
+                        )}
+                        Sign Out
+                      </button>
+                    )}
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
+        </div>
+      </div>
+    </nav>
   );
 }
 
 function mapStateToProps(state) {
-  return{
+  return {
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     logoutUser: () => dispatch(logoutUser()),
-  }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menus);

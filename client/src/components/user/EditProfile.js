@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
-import {
-  Avatar,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Icon,
-  TextField,
-  Typography,
-} from "@mui/material";
-
-import PersonIcon from "@mui/icons-material/Person";
-import { FileUpload } from "@mui/icons-material";
-
 import { updateUser, readUser } from "../../../actions/userActions.js";
 
 // import "./../assets/css/EditProfile.css";
@@ -67,7 +53,6 @@ function EditProfile(props) {
       userData
     );
   };
-
 
   return (
     <Card>
@@ -145,7 +130,9 @@ function EditProfile(props) {
           Submit
         </Button>
       </CardActions>
-      {props.redirectToProfile || !props.profile ? <Navigate to={`/user/${props.user.userId}`} replace={true} />: null}
+      {props.redirectToProfile || !props.profile ? (
+        <Navigate to={`/user/${props.user.userId}`} replace={true} />
+      ) : null}
     </Card>
   );
 }

@@ -1,55 +1,110 @@
-import React, { useState } from "react";
-
-import FollowGrid from "./FollowGrid";
+import React, { useState, useEffect } from "react";
+import { Tab } from "@headlessui/react";
 import PostList from "../post/PostList";
 
-import { Box, Tabs, Tab } from "@mui/material";
+import { connect } from "react-redux";
+
+import { unfollow } from "../../../actions/userActions";
+import { listByUser } from "../../../actions/postActions";
+import PeopleCard from "./PeopleCard";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 function ProfileTab(props) {
-  const [value, setValue] = useState(0);
-  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    props.listByUser({ userId: props.userId });
+  }, [props.userId]);
 
-  const removePost = (post) => {
-    const updatedPosts = [...posts];
-    const index = updatedPosts.indexOf(post);
-    updatedPosts.splice(index, 1);
-    setPosts(updatedPosts);
-  };
-
-  const handleChange = (event, value) => {
-    setValue(value);
+  const clickUnfollow = async (user) => {
+    await props.unfollow(user._id);
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Tabs value={value} onChange={handleChange} centered>
-        <Tab label="Posts" />
-        <Tab label="Following" />
-        <Tab label="Followers" />
-      </Tabs>
-      {value === 0 &&
-        (props.posts.length ? (
-          <PostList
-            removeUpdate={removePost}
-            posts={props.posts}
-          />
-        ) : (
-          "No Posts"
-        ))}
-      {value === 1 &&
-        (props.profile.following.length ? (
-          <FollowGrid people={props.profile.following} />
-        ) : (
-          "No Followings"
-        ))}
-      {value === 2 &&
-        (props.profile.followers.length ? (
-          <FollowGrid people={props.profile.followers} />
-        ) : (
-          "No Followers"
-        ))}
-    </Box>
+    <Tab.Group as="div" className="divide-y">
+      <Tab.List className="grid grid-cols-3 gap-2 w-full">
+        {["Posts", "Followers", "Following"].map((tab, idx) => {
+          return (
+            <Tab
+              key={idx}
+              className={({ selected }) =>
+                classNames(
+                  "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700",
+                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2",
+                  selected
+                    ? "bg-white shadow"
+                    : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-500"
+                )
+              }
+            >
+              {tab}
+            </Tab>
+          );
+        })}
+      </Tab.List>
+      <Tab.Panels className="my-2">
+        <Tab.Panel className="m-4">
+          {/* Users Posts List */}
+          <PostList posts={props.posts} />
+        </Tab.Panel>
+        <Tab.Panel>
+          {/* Users Followers List */}
+          {props.profile &&
+            props.profile.followers.map((people, idx) => {
+              return (
+                <PeopleCard
+                  key={idx}
+                  people={people}
+                  callback={
+                    props.userId == props.user.userId ? clickUnfollow : null
+                  }
+                  btn="unfollow"
+                />
+              );
+            })}
+        </Tab.Panel>
+        <Tab.Panel>
+          {/* Users Following List */}
+          {props.profile &&
+            props.profile.following.map((people, idx) => {
+              return (
+                <PeopleCard
+                  key={idx}
+                  people={people}
+                  callback={
+                    props.userId == props.user.userId ? clickUnfollow : null
+                  }
+                  btn="unfollow"
+                />
+              );
+            })}
+        </Tab.Panel>
+      </Tab.Panels>
+    </Tab.Group>
   );
 }
 
-export default ProfileTab;
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+    redirectToSignin: state.user.redirectToSignin,
+    isLoading: state.user.isLoading,
+    profile: state.user.profile,
+    following: state.user.following,
+    msg: state.user.msg,
+    posts: state.posts.posts,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    follow: (id) => dispatch(follow(id)),
+    unfollow: (id) => dispatch(unfollow(id)),
+    readUser: (params) => dispatch(readUser(params)),
+    listByUser: (params) => dispatch(listByUser(params)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileTab);

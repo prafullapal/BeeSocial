@@ -1,31 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Icon,
-  TextField,
-  Typography,
-} from "@mui/material";
 import { connect } from "react-redux";
 import { signupUser } from "../../../actions/signupAction.js";
-
-// import "./../assets/css/Signup.css";
 
 function Signup(props) {
   const [values, setValues] = useState({
     name: "",
     password: "",
     email: "",
-    open: false,
   });
 
   const handleChange = (name) => (event) => {
@@ -39,75 +20,92 @@ function Signup(props) {
       password: values.password || undefined,
     };
     props.signupUser(user);
-    props.msg ? setValues({...values, open:true}): null;
-    console.log("SignUp message:: ",props.msg);
+    console.log("SignUp message:: ", props.msg);
   };
 
   return (
-    <div>
-      <Card>
-        <CardContent>
-          <Typography variant="h6">Sign Up</Typography>
-          <TextField
+    <div className="space-y-6">
+      <div>
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Name
+        </label>
+        <div className="mt-2">
+          <input
             id="name"
-            label="Name"
+            name="name"
+            type="name"
+            autoComplete="name"
             value={values.name}
             onChange={handleChange("name")}
-            margin="normal"
+            required
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
-          <br />
-          <TextField
+        </div>
+      </div>
+      <div>
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Email address
+        </label>
+        <div className="mt-2">
+          <input
             id="email"
+            name="email"
             type="email"
-            label="Email"
+            autoComplete="email"
             value={values.email}
             onChange={handleChange("email")}
-            margin="normal"
+            required
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
-          <br />
-          <TextField
+        </div>
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium leading-6 text-gray-900"
+          >
+            Password
+          </label>
+          <div className="text-sm">
+            <a
+              href="#"
+              className="font-semibold text-indigo-600 hover:text-indigo-500"
+            >
+              Forgot password?
+            </a>
+          </div>
+        </div>
+        <div className="mt-2">
+          <input
             id="password"
+            name="password"
             type="password"
-            label="Password"
+            autoComplete="current-password"
             value={values.password}
             onChange={handleChange("password")}
-            margin="normal"
+            required
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
-          <br />{" "}
-          {props.error && (
-            <Typography component="p" color="error">
-              <Icon color="error">error</Icon>
-              {props.error}
-            </Typography>
-          )}
-          {props.msg && (
-            <Typography component="p" color="error">
-              <Icon color="error">error</Icon>
-              {props.msg}
-            </Typography>
-          )}
-        </CardContent>
-        <CardActions>
-          <Button color="primary" variant="contained" onClick={clickSubmit}>
-            Submit
-          </Button>
-        </CardActions>
-      </Card>
-      <Dialog open={props.msg ? true : false} disableBackdropClick={true}>
-        <DialogTitle>New Account</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            New account successfully created.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Link to="/signin">
-            <Button color="primary" autoFocus="autoFocus" variant="contained">
-              Sign In
-            </Button>
-          </Link>
-        </DialogActions>
-      </Dialog>
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="submit"
+          onClick={clickSubmit}
+          className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Sign up
+        </button>
+      </div>
     </div>
   );
 }
@@ -118,13 +116,13 @@ function mapStateToProps(state) {
     msg: state.signup.msg,
     isLoading: state.signup.isLoading,
     error: state.signup.error,
-  }
+  };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    signupUser: (user)=> dispatch(signupUser(user)),
-  }
+    signupUser: (user) => dispatch(signupUser(user)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);

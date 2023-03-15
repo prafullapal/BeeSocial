@@ -3,19 +3,6 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { loginUser } from "../../../actions/authActions.js";
 import { Navigate } from "react-router-dom";
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Button,
-  TextField,
-  Typography,
-  Icon,
-} from "@mui/material";
-
-import ErrorIcon from "@mui/icons-material/Error";
-
-// import "./../assets/css/Signin.css";
 
 function Signin(props) {
   const [values, setValues] = useState({
@@ -37,47 +24,69 @@ function Signin(props) {
   };
 
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h6">Sign In</Typography>
-        <TextField
-          id="email"
-          type="email"
-          label="Email"
-          value={values.email}
-          onChange={handleChange("email")}
-          margin="normal"
-        />
-        <br />
-        <TextField
-          id="password"
-          type="password"
-          label="Password"
-          value={values.password}
-          onChange={handleChange("password")}
-          margin="normal"
-        />
-        <br />
-        {props.error ? (
-          <Typography component="p" color="error">
-            <Icon color="error">
-              <ErrorIcon />
-            </Icon>
-            {props.error.message}
-          </Typography>
-        ) : null}
-      </CardContent>
-      {props.isAuthenticated ? <Navigate to="/" replace={true} /> : null}
-      <CardActions>
-        {!props.isLoading ? (
-          <Button color="primary" variant="contained" onClick={clickSubmit}>
-            Submit
-          </Button>
-        ) : (
-          "Loading..."
-        )}
-      </CardActions>
-    </Card>
+    <div className="space-y-6">
+      <div>
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Email address
+        </label>
+        <div className="mt-2">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={values.email}
+            onChange={handleChange("email")}
+            required
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+        </div>
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium leading-6 text-gray-900"
+          >
+            Password
+          </label>
+          <div className="text-sm">
+            <a
+              href="#"
+              className="font-semibold text-indigo-600 hover:text-indigo-500"
+            >
+              Forgot password?
+            </a>
+          </div>
+        </div>
+        <div className="mt-2">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            value={values.password}
+            onChange={handleChange("password")}
+            required
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="submit"
+          onClick={clickSubmit}
+          className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Sign in
+        </button>
+      </div>
+    </div>
   );
 }
 

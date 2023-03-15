@@ -1,22 +1,11 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-} from "@mui/material";
-
-import DeleteIcon from "@mui/icons-material/Delete";
 import { connect } from "react-redux";
 import { removeUser } from "../../../actions/userActions.js";
 
 function DeleteUser(props) {
+  let navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   const clickButton = () => {
@@ -26,6 +15,7 @@ function DeleteUser(props) {
     props.removeUser({
       userId: props.user.userId,
     });
+    navigate("/");
   };
   const handleRequestClose = () => {
     setOpen(false);
@@ -55,15 +45,9 @@ function DeleteUser(props) {
           </Button>
         </DialogActions>
       </Dialog>
-      {props.msg ?  <Navigate to="/" replace={true} />: null}
     </span>
   );
 }
-//propType to be updated because now we get user instead of userId and user has user.userId
-DeleteUser.propTypes = {
-  user: PropTypes.object.isRequired,
-};
-
 
 function mapStateToProps(state) {
   return {
@@ -72,14 +56,14 @@ function mapStateToProps(state) {
     isLoading: state.user.isLoading,
     error: state.user.error,
     msg: state.user.msg,
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     logoutUser: () => dispatch(logoutUser()),
     removeUser: (params) => dispatch(removeUser(params)),
-  }
+  };
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(DeleteUser);
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteUser);

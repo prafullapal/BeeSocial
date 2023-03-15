@@ -10,6 +10,7 @@ const listNewsFeed = async (req, res, next) => {
       postedBy: { $in: following.following },
     })
       .populate("comments.postedBy", "_id name")
+      .populate("likes", "_id name")
       .populate("postedBy", "_id name")
       .sort("-createdAt")
       .exec();
@@ -24,6 +25,7 @@ const listByUser = async (req, res, next) => {
   try {
     let posts = await Posts.find({ postedBy: req.params.userId })
       .populate("comments.postedBy", "_id name")
+      .populate("likes", "_id name")
       .populate("postedBy", "_id name")
       .sort("-createdAt")
       .exec();
@@ -45,6 +47,7 @@ const create = async (req, res, next) => {
     let result = await post.save();
     let newPost = await Posts.findById(result._id)
       .populate("comments.postedBy", "_id name")
+      .populate("likes", "_id name")
       .populate("postedBy", "_id name")
       .exec();
     res.status(200).json(newPost);
@@ -73,6 +76,7 @@ const postById = async (req, res, next) => {
   try {
     let post = await Posts.findById(req.params.postId)
       .populate("comments.postedBy", "_id name")
+      .populate("likes", "_id name")
       .populate("postedBy", "_id name")
       .exec();
     res.status(200).json(post);
@@ -123,6 +127,8 @@ const like = async (req, res, next) => {
       { new: true }
     )
       .populate("likes", "_id name")
+      .populate("comments.postedBy", "_id name")
+      .populate("postedBy", "_id name")
       .exec();
     res.status(200).json(post);
   } catch (err) {
@@ -140,6 +146,8 @@ const unlike = async (req, res, next) => {
       { new: true }
     )
       .populate("likes", "_id name")
+      .populate("comments.postedBy", "_id name")
+      .populate("postedBy", "_id name")
       .exec();
     res.status(200).json(post);
   } catch (err) {
@@ -158,6 +166,7 @@ const comment = async (req, res, next) => {
       { new: true }
     )
       .populate("comments.postedBy", "_id name")
+      .populate("likes", "_id name")
       .populate("postedBy", "_id name")
       .exec();
     res.status(200).json(post);
@@ -177,6 +186,7 @@ const uncomment = async (req, res, next) => {
       { new: true }
     )
       .populate("comments.postedBy", "_id name")
+      .populate("likes", "_id name")
       .populate("postedBy", "_id name")
       .exec();
     res.status(200).json(post);

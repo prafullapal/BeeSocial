@@ -22,8 +22,9 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        test: /\.(sass|less|css)$/,
+        include: path.resolve(__dirname, "client/src"),
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.(png|woff|jpg|woff2|eot|ttf|svg)$/,

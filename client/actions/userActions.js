@@ -29,7 +29,7 @@ export function readUser(params) {
     dispatch({
       type: USER_DETAILS_REQUEST,
     });
-    try{
+    try {
       let response = await axios.get("/api/users/" + params.userId, {
         headers: {
           Accept: "application/json",
@@ -40,14 +40,14 @@ export function readUser(params) {
       dispatch({
         type: USER_DETAILS_SUCCESS,
         payload: response.data,
-      })
-    } catch(error) {
+      });
+    } catch (error) {
       dispatch({
         type: USER_DETAILS_FAILURE,
         payload: error,
-      })
+      });
     }
-  }
+  };
 }
 
 export function listUser() {
@@ -55,19 +55,19 @@ export function listUser() {
     dispatch({
       type: USER_LIST_REQUEST,
     });
-    try{
+    try {
       let response = await axios.get("/api/users/list");
       dispatch({
         type: USER_LIST_SUCCESS,
         payload: response.data,
-      })
-    } catch(error) {
+      });
+    } catch (error) {
       dispatch({
         type: USER_LIST_FAILURE,
         payload: error,
-      })
+      });
     }
-  }
+  };
 }
 
 export function updateUser(params, user) {
@@ -107,7 +107,7 @@ export function removeUser(params) {
           "Content-Type": "application/json",
         },
       });
-      console.log("Delete Response", response.data);
+      console.log("Delete Response", response);
       dispatch({
         type: USER_REMOVE_SUCCESS,
         payload: response.data,
