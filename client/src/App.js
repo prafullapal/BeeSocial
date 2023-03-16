@@ -1,8 +1,8 @@
 import React from "react";
-import MainRouter from "./MainRouter";
 import { BrowserRouter } from "react-router-dom";
-
 import { connect } from "react-redux";
+
+import MainRouter from "./MainRouter";
 
 const App = (props) => {
   console.log(props.data);

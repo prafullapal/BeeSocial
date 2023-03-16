@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 
 import { updateUser, readUser } from "../../../actions/userActions.js";
 
-// import "./../assets/css/EditProfile.css";
 import { connect } from "react-redux";
 function EditProfile(props) {
   const [values, setValues] = useState({

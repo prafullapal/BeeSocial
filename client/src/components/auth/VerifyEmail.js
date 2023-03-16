@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-
 import { connect } from "react-redux";
 
 import { verifyEmail } from "../../../actions/signupAction";

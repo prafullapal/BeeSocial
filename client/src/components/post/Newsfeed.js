@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
 import PostList from "./PostList";
-
 import { listNewsFeed } from "../../../actions/postActions";
 
 function Newsfeed(props) {
@@ -21,11 +20,11 @@ function Newsfeed(props) {
 
   return (
     <>
-      <p className="p-4 text-xl text-gray-800">News Feed</p>
       <div
         id="postCards"
-        className="grid grid-flow-row gap-4 auto-rows-max p-4"
+        className="grid grid-flow-row auto-rows-max m-2 bg-white"
       >
+        <p className="text-xl text-gray-800 px-2 py-4">News Feed</p>
         <PostList posts={props.feed} />
       </div>
     </>

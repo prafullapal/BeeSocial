@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 import Comments from "./Comment";
-import { connect } from "react-redux";
 import { like, remove, unlike } from "../../../actions/postActions";
 
 function Post(props) {
@@ -46,7 +45,7 @@ function Post(props) {
     : null;
 
   return (
-    <div className="bg-white p-2 rounded-md divide-y divide-gray-300">
+    <div className="p-2 rounded-md divide-y divide-gray-300">
       {/* Header of the PostCard */}
       <div className="flex items-center justify-between">
         <div className="flex items-center">
@@ -71,7 +70,7 @@ function Post(props) {
               </p>
             </div>
             {/* Status or User Id */}
-            <p className="text-sm text-gray-600">{props.post.postedBy.id}</p>
+            <p className="text-sm text-gray-500">{props.post.postedBy._id}</p>
           </div>
         </div>
         {/* <div className="px-2">

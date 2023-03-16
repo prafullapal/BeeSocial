@@ -1,11 +1,8 @@
-import React, { Fragment } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-import { logoutUser } from "../../../actions/authActions";
-
-import { Menu, Transition } from "@headlessui/react";
+import { Menu, Dialog, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-
 import {
   UserCircleIcon,
   Cog6ToothIcon,
@@ -14,12 +11,15 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/outline";
 
+import { logoutUser } from "../../../actions/authActions";
+
 function Menus(props) {
   let navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   return (
     <nav
-      className={`bg-gray-200 md:px-30 lg:px-60 ${
+      className={`bg-gray-200 sm:px-10 lg:px-40  ${
         props.isAuthenticated ? "" : "hidden"
       }`}
     >
@@ -30,7 +30,77 @@ function Menus(props) {
         </div>
         <div className="p-4 flex space-x-2 items-center">
           {/* search */}
-          <button>search</button>
+          <button onClick={() => setOpen(true)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 text-violet-500 hover:scale-150 transition duration-500 ease-in-out"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          </button>
+          <Transition appear show={open} as={Fragment}>
+            <Dialog
+              as="div"
+              className="relative z-10"
+              onClose={() => setOpen(false)}
+            >
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="fixed inset-0 bg-black bg-opacity-25" />
+              </Transition.Child>
+
+              <div className="fixed inset-0 overflow-y-auto">
+                <div className="flex min-h-full items-center justify-center p-4 text-center">
+                  <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
+                  >
+                    <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                      <Dialog.Title
+                        as="h3"
+                        className="text-lg font-medium leading-6 text-gray-900"
+                      >
+                        Search
+                      </Dialog.Title>
+                      <div className="mt-2">
+                        {/* Search Bar and Search Results Heres */}
+                      </div>
+
+                      <div className="mt-4">
+                        <button
+                          type="button"
+                          className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                          onClick={() => setOpen(false)}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </Dialog.Panel>
+                  </Transition.Child>
+                </div>
+              </div>
+            </Dialog>
+          </Transition>
           <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="inline-flex w-full items-center justify-center rounded-full bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -106,7 +176,7 @@ function Menus(props) {
                   </Menu.Item>
                 </div>
                 <div className="px-1 py-1">
-                  <Menu.Item>
+                  {/* <Menu.Item>
                     {({ active }) => (
                       <button
                         className={`${
@@ -127,13 +197,16 @@ function Menus(props) {
                         Help
                       </button>
                     )}
-                  </Menu.Item>
+                  </Menu.Item> */}
                   <Menu.Item>
                     {({ active }) => (
                       <button
                         className={`${
                           active ? "bg-violet-500 text-white" : "text-gray-900"
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        onClick={() => {
+                          navigate(`/user/settings/${props.user.userId}`);
+                        }}
                       >
                         {active ? (
                           <Cog6ToothIcon

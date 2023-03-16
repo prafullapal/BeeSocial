@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+
 import { comment, uncomment } from "../../../actions/postActions";
 
 function Comments(props) {

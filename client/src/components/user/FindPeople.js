@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { findPeople, follow } from "../../../actions/userActions";
 import { connect } from "react-redux";
+
+import { findPeople, follow } from "../../../actions/userActions";
 import PeopleCard from "./PeopleCard";
 
 function FindPeople(props) {

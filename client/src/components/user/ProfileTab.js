@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Tab } from "@headlessui/react";
-import PostList from "../post/PostList";
-
 import { connect } from "react-redux";
 
+import PostList from "../post/PostList";
 import {
   findPeople,
   follow,
@@ -34,7 +33,7 @@ function ProfileTab(props) {
   };
   return (
     <Tab.Group as="div" className="divide-y">
-      <Tab.List className="grid grid-cols-3 gap-2 w-full">
+      <Tab.List className="grid grid-cols-3 gap-2 w-full mx-2">
         {["Posts", "Followers", "Following"].map((tab, idx) => {
           return (
             <Tab
@@ -55,7 +54,7 @@ function ProfileTab(props) {
         })}
       </Tab.List>
       <Tab.Panels className="my-2">
-        <Tab.Panel className="m-4">
+        <Tab.Panel>
           {/* Users Posts List */}
           <PostList posts={props.posts} />
         </Tab.Panel>

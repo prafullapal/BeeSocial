@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+
 import { create } from "../../../actions/postActions";
 
 function NewPost(props) {
@@ -28,9 +29,9 @@ function NewPost(props) {
   console.log(values.photo);
   return (
     <>
-      <p className="p-4 text-xl text-gray-800">Create New Post</p>
-      <div id="newPost" className="mb-4 p-4">
-        <div className="bg-white p-2 rounded-md divide-y divide-gray-300">
+      <div id="newPost" className="m-2 bg-white rounded-lg">
+        <p className="text-xl text-gray-800 px-2 py-4">Create New Post</p>
+        <div className="p-2 rounded-md divide-y divide-gray-300">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <img
@@ -49,7 +50,7 @@ function NewPost(props) {
                   </p>
                 </div>
                 {/* Status */}
-                <p className="text-sm text-gray-600">Status</p>
+                <p className="text-sm text-gray-500">Status</p>
               </div>
             </div>
             <div className="px-2">
@@ -62,13 +63,13 @@ function NewPost(props) {
                   className="-z-1 hidden"
                 />
                 {/* Image Upload Button */}
-                <div className="bg-violet-50 w-8 h-8 cursor-pointer rounded-full py-2 px-2 text-violet-500">
+                <div className="bg-violet-700 w-8 h-8 cursor-pointer rounded-full p-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
-                    stroke="currentColor"
+                    stroke="white"
                     className="w-4 h-4"
                   >
                     <path
@@ -103,7 +104,7 @@ function NewPost(props) {
 
           <div className="flex justify-end p-2">
             <button
-              className="text-md bg-violet-500 rounded-md py-1 px-2 text-gray-50"
+              className="text-md bg-violet-700 rounded-md py-1 px-2 text-slate-100"
               onClick={clickPost}
             >
               Post
