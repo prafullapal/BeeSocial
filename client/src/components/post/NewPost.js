@@ -41,7 +41,9 @@ function NewPost(props) {
               <div className="px-2">
                 <div className="flex">
                   {/* Name of the Post Creator */}
-                  <p className="text-sm text-gray-800">{props.user.name}</p>
+                  <p className="text-sm text-gray-800">
+                    <a href={`/user/${props.user.userId}`}>{props.user.name}</a>
+                  </p>
                   <p className="text-sm px-2 text-gray-500">
                     {/* User Id */}| {props.user.userId}
                   </p>

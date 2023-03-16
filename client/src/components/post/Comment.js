@@ -57,8 +57,15 @@ function Comments(props) {
               />
               <div className="bg-gray-200 rounded-md w-full px-2 py-1">
                 <div className="flex gap-2">
-                  <p className="font-bold text-sm">{item.postedBy.name}</p>
-                  <p className="text-sm text-gray-400"> | Jorden007</p>
+                  <p className="font-bold text-sm">
+                    <a href={`/user/${item.postedBy._id}`}>
+                      {item.postedBy.name}
+                    </a>
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    {" "}
+                    | {item.postedBy.name}
+                  </p>
                 </div>
                 <p className="text-gray-900 text-md">{item.text}</p>
               </div>

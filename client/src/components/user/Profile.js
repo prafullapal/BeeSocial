@@ -139,7 +139,9 @@ function Profile(props) {
                 />
                 <div className="text-gray-600">
                   <p className="font-bold text-2xl text-gray-800">
-                    {props.profile.name}
+                    <a href={`/user/${props.profile._id}`}>
+                      {props.profile.name}
+                    </a>
                   </p>
                   <p className="text-md">{props.profile._id}</p>
                   <p className="text-sm">Kanpur, Uttar Pradesh</p>

@@ -63,6 +63,14 @@ function ProfileTab(props) {
                 />
               );
             })}
+          {props.profile && props.profile.followers.length === 0 && (
+            <div className="bg-violet-100 rounded-md m-4 p-4">
+              <p className="text-sm text-gray-500">No Followers?</p>
+              <p className="text-md font-bold text-gray-600">
+                Create Posts, to attract Followers
+              </p>
+            </div>
+          )}
         </Tab.Panel>
         <Tab.Panel>
           {/* Users Following List */}
@@ -79,6 +87,14 @@ function ProfileTab(props) {
                 />
               );
             })}
+          {props.profile && props.profile.following.length === 0 && (
+            <div className="bg-violet-100 rounded-md m-4 p-4">
+              <p className="text-sm text-gray-500">No Followings?</p>
+              <p className="text-md font-bold text-gray-600">
+                You have not followed anyone. Follow people to see their posts.
+              </p>
+            </div>
+          )}
         </Tab.Panel>
       </Tab.Panels>
     </Tab.Group>

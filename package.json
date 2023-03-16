@@ -1,5 +1,5 @@
 {
-  "name": "social_media_app",
+  "name": "beesocial",
   "main": "./server/server.js",
   "license": "MIT",
   "scripts": {

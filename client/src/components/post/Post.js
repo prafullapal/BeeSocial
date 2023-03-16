@@ -59,7 +59,9 @@ function Post(props) {
             <div className="flex">
               {/* Name of the Post Creator */}
               <p className="text-sm text-gray-800">
-                {props.post.postedBy.name}
+                <a href={`/user/${props.post.postedBy._id}`}>
+                  {props.post.postedBy.name}
+                </a>
               </p>
               <p className="text-sm px-2 text-gray-500">
                 {/* Following or Not Following Tag */}
